@@ -1,6 +1,7 @@
 from collections import defaultdict
 from enum import Enum
 from functools import reduce
+from operator import itemgetter
 
 
 class Figure(Enum):
@@ -30,10 +31,12 @@ class Game:
 
     def play(self, turns):
         scores = map(self.play_turn, turns)
-        final_score = reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), scores, (0, 0))
+        # final_score = reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), scores, (0, 0))
+        final_score = sum(map(itemgetter(0), scores)), sum(map(itemgetter(1), scores))
         return final_score
 
     def play_turn(self, turn):
+        # returns a couple of scores from a couple of figures
         w1, w2 = self.rules.get(turn)  # battle score
         f1, f2 = turn  # figure score
         return w1.value + f1.value, w2.value + f2.value
@@ -50,9 +53,9 @@ def decode_input_part2(input_data):
            'X': Score.Loss, 'Y': Score.Draw, 'Z': Score.Win}
     decoded_turns = map(lambda encoded_turn: (key.get(encoded_turn[0]), key.get(encoded_turn[1])), input_data)
 
-    expected_figure = defaultdict(dict)  # expected_figure[expected_result][against_figure]
-    for (figure1, figure2), (result1, result2) in Game.rules.items():
-        expected_figure[result2][figure1] = figure2
+    expected_figure = defaultdict(dict)
+    for (against_figure, figure_to_play), (_, expected_result) in Game.rules.items():
+        expected_figure[expected_result][against_figure] = figure_to_play
     turns = map(lambda decoded_turn: (decoded_turn[0], expected_figure.get(decoded_turn[1]).get(decoded_turn[0])),
                 decoded_turns)
     return turns
