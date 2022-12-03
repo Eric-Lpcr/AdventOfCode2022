@@ -1,16 +1,14 @@
 from collections import defaultdict
-from enum import Enum
-from functools import reduce
-from operator import itemgetter
+from enum import IntEnum
 
 
-class Figure(Enum):
+class Figure(IntEnum):
     Rock = 1
     Paper = 2
     Scissors = 3
 
 
-class Score(Enum):
+class Score(IntEnum):
     Loss = 0
     Draw = 3
     Win = 6
@@ -32,14 +30,16 @@ class Game:
     def play(self, turns):
         scores = map(self.play_turn, turns)
         # final_score = reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), scores, (0, 0))
-        final_score = sum(map(itemgetter(0), scores)), sum(map(itemgetter(1), scores))
+        # final_score = sum(map(itemgetter(0), scores)),
+        #               sum(map(itemgetter(1), scores))  # WRONG: first map consumes scores...
+        final_score = list(map(sum, zip(*scores)))  # zip converts list of tuples to tuple of lists
         return final_score
 
     def play_turn(self, turn):
         # returns a couple of scores from a couple of figures
         w1, w2 = self.rules.get(turn)  # battle score
         f1, f2 = turn  # figure score
-        return w1.value + f1.value, w2.value + f2.value
+        return w1 + f1, w2 + f2
 
 
 def decode_input_part1(input_data):
