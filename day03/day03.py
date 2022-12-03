@@ -22,15 +22,15 @@ def compute_rucksacks_priorities(rucksacks):
     return map(compute_rucksack_priority, rucksacks)
 
 
-def compute_rucksack_group_priority(rucksacks):
-    # common_item = reduce(lambda common_items, rucksack: common_items.intersection(set(rucksack)),
-    #                      rucksacks_sets[1:],
-    #                      set(rucksacks[0])
-    #                      ).pop()
+def compute_rucksack_group_priority(rucksack_group):
+    # badge = reduce(lambda badges, rucksack: badges.intersection(set(rucksack)),
+    #                rucksack_group[1:],
+    #                set(rucksack_group[0])
+    #                ).pop()
     # set::intersection takes multiple sets
-    rucksacks_sets = map(set, rucksacks)
-    common_item = next(rucksacks_sets).intersection(*rucksacks_sets).pop()
-    return compute_item_priority(common_item)
+    rucksacks_sets = map(set, rucksack_group)
+    badge = next(rucksacks_sets).intersection(*rucksacks_sets).pop()
+    return compute_item_priority(badge)
 
 
 def grouper(iterable, n, fill_value=None):
