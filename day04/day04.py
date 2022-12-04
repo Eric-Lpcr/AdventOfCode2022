@@ -13,7 +13,7 @@ class InclusiveRange:
             return self.begin <= item <= self.end
 
     def overlap(self, another_range):
-        return self in another_range or another_range.begin in self or another_range.end in self
+        return another_range.begin in self or self.begin in another_range
 
     def __str__(self):
         return f'[{self.begin}, {self.end}]'
