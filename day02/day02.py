@@ -32,7 +32,7 @@ class Game:
         # final_score = reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), scores, (0, 0))
         # final_score = sum(map(itemgetter(0), scores)),
         #               sum(map(itemgetter(1), scores))  # WRONG: first map consumes scores...
-        final_score = list(map(sum, zip(*scores)))  # zip converts list of tuples to tuple of lists
+        final_score = tuple(map(sum, zip(*scores)))  # zip converts list of tuples to tuple of lists
         return final_score
 
     def play_turn(self, turn):
