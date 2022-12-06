@@ -42,7 +42,7 @@ def david_finds_the_marker_position(datastream, marker_length):
     marker = []
     for pos, char in enumerate(datastream):  # reading one by one and never sub indexing for marker length
         if char in marker:
-            marker = marker[marker.index(char)+1:]  # reduce marker to start after duplicate character
+            del marker[:marker.index(char)+1]  # reduce marker till duplicate character, included
         marker.append(char)
         if len(marker) == marker_length:
             return pos + 1
