@@ -30,11 +30,11 @@ def visible_trees(forest):
 
     # North view needs transposition of lines and columns
     visible_from_n = [visible_from_left(trees) for trees in zip(*forest)]
-    visible_from_n = list(zip(*visible_from_n))  # transpose result back
+    visible_from_n = zip(*visible_from_n)  # transpose result back
 
     # South view is reversed and transposed
     visible_from_s = [list(reversed(visible_from_left(reversed(trees)))) for trees in zip(*forest)]
-    visible_from_s = list(zip(*visible_from_s))  # transpose result back
+    visible_from_s = zip(*visible_from_s)  # transpose result back
 
     visible = combine(visible_from_w, visible_from_e, operator.or_)
     visible = combine(visible, visible_from_n, operator.or_)
@@ -72,7 +72,7 @@ def scenic_scores(forest):
     col_scores = [[0] * len(forest)]  # first column has score 0 (no tree view to the north)
     col_scores.extend([line_scenic_scores(trees) for trees in islice(zip(*forest), 1, len(forest)-1)])
     col_scores.append(col_scores[0])
-    col_scores = list(zip(*col_scores))  # transpose
+    col_scores = zip(*col_scores)  # transpose
 
     scores = combine(line_scores, col_scores, operator.mul)
     return scores
