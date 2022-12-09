@@ -54,7 +54,9 @@ class Rope:
 
     def __init__(self, knot_count=2):
         self.knots = [Knot() for _ in range(knot_count)]
-        self.tail_history = {self.knots[-1].coord}
+        self.head = self.knots[0]
+        self.tail = self.knots[-1]
+        self.tail_history = {self.tail.coord}
 
     def execute_head_moves(self, moves):
         for move in moves:
@@ -63,10 +65,10 @@ class Rope:
                 self.move_head(self.directions[direction_code])
 
     def move_head(self, direction):
-        self.knots[0].move(direction)
+        self.head.move(direction)
         for leader, follower in pairwise(self.knots):
             follower.follow(leader)
-        self.tail_history.add(self.knots[-1].coord)
+        self.tail_history.add(self.tail.coord)
 
     def tail_visited_count(self):
         return len(self.tail_history)
