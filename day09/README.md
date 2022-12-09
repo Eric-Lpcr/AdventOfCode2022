@@ -10,4 +10,4 @@ I kept my Part 1 solution in [day_09_1.py](day_09_1.py).
 A `Rope` has a head a tail, the tail follows the head moves.
 
 For part 2, a `Knot` class appears, which gets the responsibility to be moved and follow another knot. 
-The `Rope` becomes a list of `Knot`.
+The `Rope` becomes a list of `Knot` and solution is generalized for part 1 and part 2.
