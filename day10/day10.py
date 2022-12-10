@@ -1,6 +1,6 @@
 import operator
 
-from itertools import accumulate
+from itertools import accumulate, starmap
 
 instruction_cycles = {'addx': 2, 'noop': 1}
 
@@ -53,7 +53,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     program_execution = run_program(program_lines)
     cycles = range(20, 220 + 1, 40)  # 220 included, hence +1
-    signal_strengths = [cycle * value for cycle, value in signal_sampler(program_execution, cycles)]
+    signal_strengths = starmap(operator.mul, signal_sampler(program_execution, cycles))
 
     result1 = sum(signal_strengths)
     print(f"Part 1: signal strength sample sum is {result1}")
