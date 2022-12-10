@@ -60,7 +60,9 @@ def main(filename, testing=False, expected1=None, expected2=None):
     if testing and expected1 is not None:
         assert result1 == expected1
 
-    result2 = draw_crt(program_execution, width=40, height=6, dark_pixel='.' if testing else ' ')
+    result2 = draw_crt(program_execution, width=40, height=6,
+                       lit_pixel='#' if testing else '\u2588',
+                       dark_pixel='.' if testing else ' ')
     print(f"Part 2: CRT displays \n{result2}")
     if testing and expected2 is not None:
         assert result2 == expected2
