@@ -1,4 +1,4 @@
-from typing import Tuple, Iterator
+from typing import Iterator
 
 from functools import partial
 from implementation import a_star_search, WeightedGraph, GridLocation

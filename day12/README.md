@@ -27,3 +27,8 @@ This time I wrote a `HeightGrid` class implementing the contract for the `a_star
 Ok, part 1 solved, one more time not so proud of me but after all, reuse is also part of the job.
 
 Part 2 is easy with this fast algorithm, just need to scan for starting points and apply the same method.
+
+### Further thoughts
+I think A* is not giving any advantage for this problem, nor Dijkstra as the graph/grid is not weighted...
+I should compare and give a try to Breadth First Search algorithm, but it seems that the implementation I got is 
+not giving the shortest path... 

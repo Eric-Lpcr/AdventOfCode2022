@@ -1,7 +1,7 @@
-from typing import Tuple, Iterator
+from typing import Iterator
 
 from functools import partial
-from implementation import a_star_search, GridLocation, WeightedGraph
+from implementation import a_star_search, dijkstra_search, GridLocation, WeightedGraph
 
 
 class HeightGrid(WeightedGraph):
@@ -48,8 +48,8 @@ def find_goals(height_grid):
 
 
 def shortest_path(grid, start, goal):
-    came_from, cost_so_far = a_star_search(grid, start, goal)
-    return cost_so_far[goal]
+    came_from, cost_so_far = a_star_search(grid, start, goal)  # also works with dijkstra_search
+    return cost_so_far.get(goal)
 
 
 def shortest_path_from_all_start_values(grid, start_value, goal):
@@ -58,9 +58,9 @@ def shortest_path_from_all_start_values(grid, start_value, goal):
     for y, line in enumerate(grid.data):
         start_locations.extend([(x, y) for x, value in enumerate(line) if value == start_value])
     for start in start_locations:
-        came_from, cost_so_far = a_star_search(grid, start, goal)
-        if goal in cost_so_far:
-            costs.add(cost_so_far[goal])
+        cost = shortest_path(grid, start, goal)
+        if cost:
+            costs.add(cost)
     return min(costs)
 
 
