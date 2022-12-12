@@ -1,6 +1,6 @@
 # [Day 12: Hill Climbing Algorithm](https://adventofcode.com/2022/day/12)
 
-Shortest path? Diskstra? No, ___A*___ !
+Shortest path? Dijkstra? No, ___A*___ !
 
 I remembered [2021 calendar, Day 15: Chiton](https://adventofcode.com/2021/day/15)
 and my [comments](../../AdventOfCode2021/day15):
