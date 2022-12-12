@@ -3,7 +3,7 @@
 Shortest path? Dijkstra? No, ___A*___ !
 
 I remembered [2021 calendar, Day 15: Chiton](https://adventofcode.com/2021/day/15)
-and my [comments](../../AdventOfCode2021/day15):
+and my [comments](https://github.com/Eric-Lpcr/AdventOfCode2021/tree/master/day15):
 
 > Oh no, graph again!
 > And shortest path on a weighted graph... That immediately recalled me Dijkstra study 20 years ago during my late 
