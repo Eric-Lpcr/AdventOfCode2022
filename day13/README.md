@@ -15,7 +15,11 @@ For part 2, I converted the list of packet pairs to a list of all packets using 
 The list is fully sortable with `sort` or `sorted` because elements are comparable with the operator `<`, 
 and containment with`ìn` is also available because of the operator `==` working on elements.
 
+### Improvements
 I did try to hack list and int comparison operators, but these classes are immutable types. 
 I also tried to simplify the code by inheriting my classes from int and list, but then _totalordering_ was not working
 and I would have had to overload all comparison operators (my classes were inheriting bad behavior...) and code
 would have become longer.
+
+I finally wrote a compact non object version with a `compare` function in [day13_compare.py](). `functools.cmp_to_key` allows to
+convert such a function to a key for `sort` or `sorted`.
