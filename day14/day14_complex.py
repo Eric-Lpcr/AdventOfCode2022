@@ -23,28 +23,26 @@ class Cave:
             self.bottom += self.infinite_bottom_depth
 
         drop_count = 0
-        back_track = deque([sand_start])
-        while self.drop_sand(sand_start, back_track):
+        while self.drop_sand(sand_start):
             drop_count += 1
         return drop_count
 
-    def drop_sand(self, position, back_track=None):
+    def drop_sand(self, position, _back_track=deque()):
         if self.at(position) is not None:
             return False  # filled
-        if not back_track:
-            back_track = deque([position])
-        if len(back_track):
-            position = back_track[-1]
+        if not len(_back_track):
+            _back_track.append(position)
+        position = _back_track[-1]
         while position.imag < self.bottom:
             for move in [1j, -1 + 1j, 1 + 1j]:
                 next_position = position + move
                 if self.at(next_position) is None:
                     position = next_position
-                    back_track.append(position)
+                    _back_track.append(position)
                     break
             else:
                 self.sand.add(position)
-                back_track.pop()
+                _back_track.pop()
                 return True  # rest
         return False  # flows
 

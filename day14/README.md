@@ -19,3 +19,6 @@ As I plotted the resting sand grain number over a grid paper, I noticed that eac
 predecessor, except for the last move. I inserted a backtracking and wow, it gained a huge amount of processing time!
 
 Oh, so lately discovered the `for: else:` construct, no need for "no move" boolean!
+
+Same documentation page, I learnt that parameter default values are initialised only once, and kept on each call to the
+function. I modified my backtracking with this construct in [day14_complex.py]().
