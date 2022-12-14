@@ -43,8 +43,8 @@ def main(filename, testing=False, expected1=None, expected2=None):
         packets = list(packets)
         print('\n'.join(map(str, packets)))
 
-    result2 = prod(i+1 for i, packet in enumerate(packets)
-                   if any(compare(packet, divider) == 0 for divider in dividers))
+    result2 = prod(packets.index(divider) + 1 for divider in dividers)
+
     print(f"Part 2: {result2}")
     if testing and expected2 is not None:
         assert result2 == expected2

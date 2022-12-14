@@ -23,3 +23,5 @@ would have become longer.
 
 I finally wrote a compact non object version with a `compare` function in [day13_compare.py](). `functools.cmp_to_key` allows to
 convert such a function to a key for `sort` or `sorted`.
+
+Better use `list.index` for part 2!
