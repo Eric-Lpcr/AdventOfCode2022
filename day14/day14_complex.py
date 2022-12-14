@@ -1,3 +1,5 @@
+from collections import deque
+
 from itertools import pairwise, chain
 
 
@@ -5,7 +7,6 @@ class Cave:
     def __init__(self,):
         self.rock = set()
         self.sand = set()
-        self.top = dict()  # key is x, value = min y
         self.bottom = 0  # max y
         self.infinite_bottom_depth = None
 
@@ -17,37 +18,37 @@ class Cave:
         return None
 
     def fill(self, sand_start=500):
-        self.top = dict((x, min(p.imag for p in chain(self.rock, self.sand) if p.real == x))
-                        for x in set(p.real for p in chain(self.rock, self.sand)))
         self.bottom = max(c.imag for c in chain(self.rock, self.sand))
         if self.infinite_bottom_depth:
             self.bottom += self.infinite_bottom_depth
 
         drop_count = 0
-        while self.drop_sand(sand_start):
+        back_track = deque([sand_start])
+        while self.drop_sand(sand_start, back_track):
             drop_count += 1
         return drop_count
 
-    def drop_sand(self, position):
+    def drop_sand(self, position, back_track=None):
         if self.at(position) is not None:
-            return False
-        top = self.top.get(position.real, self.bottom)
-        if position.imag < top:
-            position = position.real + (top - 1) * 1j
+            return False  # filled
+        if not back_track:
+            back_track = deque([position])
+        if len(back_track):
+            position = back_track[-1]
         while position.imag < self.bottom:
-            moved = False
-            for move in [0 + 1j, -1 + 1j, 1 + 1j]:
-                if self.at(position + move) is None:
-                    position += move
-                    moved = True
+            rest = True
+            for move in [1j, -1 + 1j, 1 + 1j]:
+                next_position = position + move
+                if self.at(next_position) is None:
+                    position = next_position
+                    back_track.append(position)
+                    rest = False
                     break
-            if not moved:
+            if rest:
                 self.sand.add(position)
-                top = self.top.get(position.real)
-                if top and position.imag < top or top is None:
-                    self.top[position.real] = position.imag
-                return True
-        return False
+                back_track.pop()
+                return True  # rest
+        return False  # flows
 
 
 def decode_path(rock_path):
