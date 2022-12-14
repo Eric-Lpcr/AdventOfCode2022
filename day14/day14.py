@@ -20,9 +20,9 @@ class Cave:
         return None
 
     def fill(self, sand_start=Coordinate(500, 0)):
-        self.top = dict((x, min(c.y for c in chain(self.rock, self.sand) if c.x == x))
-                        for x in set(p.x for p in chain(self.rock, self.sand)))
-        self.bottom = max(c.y for c in chain(self.rock, self.sand))
+        for position in chain(self.rock, self.sand):
+            self.update_top(position)
+        self.bottom = max(position.y for position in chain(self.rock, self.sand))
         if self.infinite_bottom_depth:
             self.bottom += self.infinite_bottom_depth
 
@@ -31,28 +31,36 @@ class Cave:
             drop_count += 1
         return drop_count
 
+    def update_top(self, position):
+        top = self.top.get(position.x)
+        if top and position.y < top or top is None:
+            self.top[position.x] = position.y
+
+    def add_sand(self, position):
+        self.sand.add(position)
+        self.update_top(position)
+
+    def fall_to_top(self, from_position):
+        top = self.top.get(from_position.x, self.bottom)
+        return Coordinate(from_position.x, max(from_position.y, top - 1))
+
     def drop_sand(self, position):
         if self.at(position) is not None:
-            return False
-        x, y = position
-        top = self.top.get(x, self.bottom)
-        if y < top:
-            y = top - 1
-        while y < self.bottom:
-            moved = False
+            return False  # filled
+        position = self.fall_to_top(position)
+
+        while position.y < self.bottom:
+            rest = True
             for dx in [0, -1, 1]:
-                next_position = Coordinate(x + dx, y + 1)
+                next_position = Coordinate(position.x + dx, position.y + 1)
                 if self.at(next_position) is None:
-                    x, y = next_position
-                    moved = True
+                    position = next_position
+                    rest = False
                     break
-            if not moved:
-                self.sand.add(Coordinate(x, y))
-                top = self.top.get(x)
-                if top and y < top or top is None:
-                    self.top[x] = y
-                return True
-        return False
+            if rest:
+                self.add_sand(position)
+                return True  # rest
+        return False  # flow out
 
 
 def all_between(start, stop):
@@ -63,10 +71,10 @@ def all_between(start, stop):
 def decode_path(rock_path):
     edges = (Coordinate(*map(int, edge_str.split(',', 2))) for edge_str in rock_path.split(' -> '))
     rocky_cells = set()
-    for edge1, edge2 in pairwise(edges):
+    for (x1, y1), (x2, y2) in pairwise(edges):
         rocky_cells.update(Coordinate(x, y)
-                           for x in all_between(edge1.x, edge2.x)
-                           for y in all_between(edge1.y, edge2.y))
+                           for x in all_between(x1, x2)
+                           for y in all_between(y1, y2))
     return rocky_cells
 
 
