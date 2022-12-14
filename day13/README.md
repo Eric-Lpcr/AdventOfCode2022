@@ -27,3 +27,5 @@ convert such a function to a key for `sort` or `sorted`.
 Better use `list.index` for part 2!
 
 Replaced evil `eval` by `ast.literal_eval`
+
+No need to sort for part 2, just need to count how many packets are lower than divider!

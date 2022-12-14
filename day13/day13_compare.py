@@ -33,19 +33,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
             print(p2)
 
     result1 = sum(i+1 for i, (p1, p2) in enumerate(packet_pairs) if compare(p1, p2) <= 0)
+
     print(f"Part 1: sum of right order pair indexes is {result1}")
     if testing and expected1 is not None:
         assert result1 == expected1
 
     dividers = [[2]], [[6]]
-    packets = sorted(chain(*packet_pairs, dividers), key=cmp_to_key(compare))
-
-    if testing:
-        print()
-        packets = list(packets)
-        print('\n'.join(map(str, packets)))
-
-    result2 = prod(packets.index(divider) + 1 for divider in dividers)
+    packets = chain(*packet_pairs, dividers)
+    result2 = prod(sum(compare(packet, divider) < 0 for packet in packets) + 1 for divider in dividers)
 
     print(f"Part 2: decoder key is {result2}")
     if testing and expected2 is not None:
