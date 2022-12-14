@@ -50,14 +50,12 @@ class Cave:
         position = self.fall_to_top(position)
 
         while position.y < self.bottom:
-            rest = True
             for dx in [0, -1, 1]:
                 next_position = Coordinate(position.x + dx, position.y + 1)
                 if self.at(next_position) is None:
                     position = next_position
-                    rest = False
                     break
-            if rest:
+            else:
                 self.add_sand(position)
                 return True  # rest
         return False  # flow out

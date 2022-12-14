@@ -36,15 +36,13 @@ class Cave:
         if len(back_track):
             position = back_track[-1]
         while position.imag < self.bottom:
-            rest = True
             for move in [1j, -1 + 1j, 1 + 1j]:
                 next_position = position + move
                 if self.at(next_position) is None:
                     position = next_position
                     back_track.append(position)
-                    rest = False
                     break
-            if rest:
+            else:
                 self.sand.add(position)
                 back_track.pop()
                 return True  # rest

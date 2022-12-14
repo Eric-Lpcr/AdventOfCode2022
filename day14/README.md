@@ -17,3 +17,5 @@ Also removed my 'fall to top' optimisation.
 
 As I plotted the resting sand grain number over a grid paper, I noticed that each sand grain follows the same path as its
 predecessor, except for the last move. I inserted a backtracking and wow, it gained a huge amount of processing time!
+
+Oh, so lately discovered the `for: else:` construct, no need for "no move" boolean!
