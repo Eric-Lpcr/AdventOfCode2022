@@ -1,3 +1,5 @@
+from ast import literal_eval
+
 from functools import total_ordering
 from itertools import chain
 from math import prod
@@ -72,7 +74,7 @@ class ListPacketItem(PacketItem):
 def main(filename, testing=False, expected1=None, expected2=None):
     print(f'--------- {filename}')
     with open(filename) as f:
-        packet_pairs = [tuple(PacketItem.build(eval(line)) for line in packet_pair_block.splitlines())
+        packet_pairs = [tuple(PacketItem.build(literal_eval(line)) for line in packet_pair_block.splitlines())
                         for packet_pair_block in f.read().split('\n\n')]
 
     if testing:

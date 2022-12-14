@@ -1,3 +1,5 @@
+from ast import literal_eval
+
 from functools import total_ordering
 
 
@@ -73,7 +75,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
     packet_pairs = list()
     with open(filename) as f:
         for packet_pair_block in f.read().split('\n\n'):
-            packet_pair = tuple(PacketItem.build(eval(line)) for line in packet_pair_block.splitlines())
+            packet_pair = tuple(PacketItem.build(literal_eval(line)) for line in packet_pair_block.splitlines())
             packet_pairs.append(packet_pair)
 
     if testing:

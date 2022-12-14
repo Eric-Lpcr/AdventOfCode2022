@@ -25,3 +25,5 @@ I finally wrote a compact non object version with a `compare` function in [day13
 convert such a function to a key for `sort` or `sorted`.
 
 Better use `list.index` for part 2!
+
+Replaced evil `eval` by `ast.literal_eval`

@@ -1,3 +1,5 @@
+from ast import literal_eval
+
 from functools import cmp_to_key
 from itertools import chain, dropwhile
 from math import prod
@@ -21,7 +23,7 @@ def compare(left, right):
 def main(filename, testing=False, expected1=None, expected2=None):
     print(f'--------- {filename}')
     with open(filename) as f:
-        packet_pairs = [tuple(eval(line) for line in packet_pair_block.splitlines())
+        packet_pairs = [tuple(literal_eval(line) for line in packet_pair_block.splitlines())
                         for packet_pair_block in f.read().split('\n\n')]
 
     if testing:
