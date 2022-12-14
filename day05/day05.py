@@ -2,7 +2,7 @@ from collections import deque, namedtuple
 from itertools import zip_longest
 
 
-CraneMove = namedtuple('int', 'number, from_stack, to_stack')
+CraneMove = namedtuple('CraneMove', 'number, from_stack, to_stack')
 
 
 def initialise_stacks(initial_stacks_description):
