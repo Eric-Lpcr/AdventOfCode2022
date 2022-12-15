@@ -81,5 +81,5 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
 
 if __name__ == '__main__':
-    main('test.txt', True, 24, None)
+    main('test.txt', True, 24, 93)
     main('input.txt')
