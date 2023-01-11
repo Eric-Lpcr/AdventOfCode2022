@@ -75,7 +75,7 @@ def scan_row(sensors_data, row_of_interest):
 def find_distress_beacon(sensors_data, limit):
     # The sole distress beacon has to be surrounded by diamonds from other sensors.
     # For each sensor, get the points on the border, and check for each whether
-    # they're in range of any sensors, returning if one is found outside all the ranges.
+    # they're in range of any sensors, return if one is found outside all the ranges.
     for sensor, _, dist in sensors_data:
         for a in range(0, dist + 1):
             b = dist + 1 - a
