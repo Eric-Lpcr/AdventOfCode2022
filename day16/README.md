@@ -61,10 +61,20 @@ path of the pair contributes less than half of the current maximum (because the 
 - with the example input, the search stops after 1_667_862 iterations: 218_791 were saved, 11%
 - with the problem input, the search stops after 281_578_065 iterations: 92_544_839_310 were saved, **99.7%** !!!
 
-# Improvements
-Instead of computing all the shortest paths between all valves on the cave map, we could optimise the map by pruning
+### Performance improvements: 
+1. putting the memorisation of the paths before testing for time limit was counter performant, generating a
+lot of useless invalid paths, with a huge impact when exploring the combinations for part 2.
+2. time limit to exit the part 1 exploration can be decreased by 2 minutes, as it is useless to travel 1 minute, open a
+valve in another minute and generate no pressure exit as the time is elapsed.
+3. Instead of computing all the shortest paths between all valves on the cave map, we could optimise the map by pruning
 the unuseful valves and replacing their edges with longer ones between their neighbors.
 For example, `AA(0)--(1)--II(0)--(1)--JJ(21)` can be simplified to `AA(0)--(2)--JJ(21)`, removing `II`.
+
+On the problem input, before correction: 430875 paths gave 98e9 combinations, 280e6 were explored in 1'30.
+After correction: 19689 paths give 193e6 combinations, shortened to 1.3e6 explored in 2 seconds!
+
+The third improvement doesn't give significant performance gain as it impacts only the Floyd-Warshall computation,
+other explorations were made on valve having a not null pressure rate. 
 
 # Reusable
 
