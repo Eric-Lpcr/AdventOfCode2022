@@ -62,19 +62,27 @@ path of the pair contributes less than half of the current maximum (because the 
 - with the problem input, the search stops after 281_578_065 iterations: 92_544_839_310 were saved, **99.7%** !!!
 
 ### Performance improvements: 
-1. putting the memorisation of the paths before testing for time limit was counter performant, generating a
+1. Putting the memorisation of the paths before testing for time limit was counter performant, generating a
 lot of useless invalid paths, with a huge impact when exploring the combinations for part 2.
-2. time limit to exit the part 1 exploration can be decreased by 2 minutes, as it is useless to travel 1 minute, open a
+2. Time limit to exit the part 1 exploration can be decreased by 2 minutes, as it is useless to travel 1 minute, open a
 valve in another minute and generate no pressure exit as the time is elapsed.
 3. Instead of computing all the shortest paths between all valves on the cave map, we could optimise the map by pruning
 the unuseful valves and replacing their edges with longer ones between their neighbors.
 For example, `AA(0)--(1)--II(0)--(1)--JJ(21)` can be simplified to `AA(0)--(2)--JJ(21)`, removing `II`.
 
-On the problem input, before correction: 430875 paths gave 98e9 combinations, 280e6 were explored in 1'30.
+On the problem input, before correction: 430875 paths gave 98e9 combinations, 280e6 were explored in 200 seconds.
+
 After correction: 19689 paths give 193e6 combinations, shortened to 1.3e6 explored in 2 seconds!
 
-The third improvement doesn't give significant performance gain as it impacts only the Floyd-Warshall computation,
-other explorations were made on valve having a not null pressure rate. 
+The third improvement doesn't give significant performance gain as it impacts only the Floyd-Warshall computation.
+Other explorations were already made on valve having a not null pressure rate. 
+
+4. Using `itertools.combinations` in part 2 doesn't allow to break enough. I replaced it with two nested loop and coded 
+a break condition for each one.
+
+After correction: 19689 paths give 193e6 combinations, shortened to **7679** explored in 1,5 seconds. Not so much gain
+(at least not aligned with the ratio of the iteration counts), I guess it's because I replaced a loop over a C 
+implementation of combinations by a pure Python loop with a test.
 
 # Reusable
 

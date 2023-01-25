@@ -92,14 +92,18 @@ def find_optimum_valve_opening_with_elephant_help(cave, start_valve, time_limit=
     all_paths.sort(key=itemgetter(1), reverse=True)
 
     iteration_count = 0
-    for ((my_path, my_pressure, p1), (elephant_path, elephant_pressure, p2)) in combinations(all_paths, 2):
-        iteration_count += 1
-        if my_pressure + elephant_pressure > most_pressure and p1 & p2 == 0:
-            most_pressure = my_pressure + elephant_pressure
-            my_best_path = my_path
-            elephant_best_path = elephant_path
-        if my_pressure < most_pressure / 2:
+    for i, (my_path, my_pressure, p1) in enumerate(all_paths[:-1]):
+        if my_pressure < most_pressure / 2:  # as the elephant contribution will be lower, because of ordering
             break
+        for (elephant_path, elephant_pressure, p2) in all_paths[i+1:]:
+            if my_pressure + elephant_pressure <= most_pressure:  # as next combination will be lower, we can stop here
+                break
+            iteration_count += 1
+            if p1 & p2 == 0:
+                most_pressure = my_pressure + elephant_pressure
+                my_best_path = my_path
+                elephant_best_path = elephant_path
+
     print(f'Part 2 iteration count: {iteration_count} over comb({len(all_paths)}, 2) = {comb(len(all_paths), 2)}')
 
     return most_pressure, my_best_path, elephant_best_path
