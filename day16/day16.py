@@ -1,8 +1,8 @@
 from math import comb
 
 import time
-from collections import namedtuple
-from operator import itemgetter
+from collections import namedtuple, defaultdict
+from operator import itemgetter, xor
 
 from itertools import combinations
 
@@ -52,10 +52,10 @@ def find_optimum_valve_opening(cave, start_valve, time_limit=30, valve_opening_t
         if current_pressure > most_pressure:
             most_pressure = current_pressure
             best_path = current_path
+        all_paths.append((current_path, current_pressure))
+
         if elapsed_time >= time_limit - 1 - valve_opening_time:  # 1' minimum travelling + opening would be useless
             return
-
-        all_paths.append((current_path, current_pressure))
 
         for next_valve in remaining_valves:
             next_path = current_path + [next_valve]
@@ -82,29 +82,50 @@ def find_optimum_valve_opening_with_elephant_help(cave, start_valve, time_limit=
         valve.bit = bit
         bit <<= 1
 
-    def encode_path(path):
+    def encode_path(p):
         code = 0
-        for a_valve in path:
+        for a_valve in p:
             code |= a_valve.bit
         return code
 
-    all_paths = [(path, pressure, encode_path(path[1:])) for path, pressure in all_paths]
-    all_paths.sort(key=itemgetter(1), reverse=True)
+    # compact all_paths to retain the max pressure and path for all paths involving the same valves (same encoding)
+    all_paths_dict = defaultdict(lambda: ([], -1))
+    for path, pressure in all_paths:
+        encoded_path = encode_path(path[1:])  # Don't encode start value as it will be common
+        if pressure > all_paths_dict[encoded_path][1]:
+            all_paths_dict[encoded_path] = (path, pressure)
+    all_paths = [(encoded_path, path, pressure) for encoded_path, (path, pressure) in all_paths_dict.items()]
 
-    iteration_count = 0
-    for i, (my_path, my_pressure, p1) in enumerate(all_paths[:-1]):
-        if my_pressure < most_pressure / 2:  # as the elephant contribution will be lower, because of ordering
-            break
-        for (elephant_path, elephant_pressure, p2) in all_paths[i+1:]:
-            if my_pressure + elephant_pressure <= most_pressure:  # as next combination will be lower, we can stop here
-                break
+    # sort all paths according to pressure, get the max first to be able to stop iteration later
+    all_paths.sort(key=itemgetter(2), reverse=True)
+
+    all_valves_path_encoding = encode_path([valve for valve in cave.nodes if valve != start_valve])
+
+    iteration_count = cutoff_count = 0
+    for i, (p1, my_path, my_pressure) in enumerate(all_paths[:-1]):
+        if my_pressure < most_pressure / 2:
+            break  # can't improve result, as the elephant contribution will be less, because of ordering
+        p2 = xor(p1, all_valves_path_encoding)  # test with complementary path key
+        if p2 in all_paths_dict:
             iteration_count += 1
-            if p1 & p2 == 0:
+            cutoff_count += 1
+            elephant_path, elephant_pressure = all_paths_dict[p2]
+            if my_pressure + elephant_pressure > most_pressure:
                 most_pressure = my_pressure + elephant_pressure
                 my_best_path = my_path
                 elephant_best_path = elephant_path
+        else:
+            for (p2, elephant_path, elephant_pressure) in all_paths[i+1:]:
+                if my_pressure + elephant_pressure <= most_pressure:
+                    break  # can't improve result, as the elephant contribution will decrease, because of ordering
+                iteration_count += 1
+                if p1 & p2 == 0:
+                    most_pressure = my_pressure + elephant_pressure
+                    my_best_path = my_path
+                    elephant_best_path = elephant_path
 
     print(f'Part 2 iteration count: {iteration_count} over comb({len(all_paths)}, 2) = {comb(len(all_paths), 2)}')
+    print(f'Part 2 cutoff count: {cutoff_count}')
 
     return most_pressure, my_best_path, elephant_best_path
 
@@ -115,19 +136,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
     cave = SimpleWeightedGraph()
     translation = str.maketrans(',;=', '   ')
     with open(filename) as f:
-        valve_infos = dict()
+        valve_data = dict()
         ValveInfo = namedtuple('ValveInfo', 'valve, neighbor_names')
         for line in f.readlines():
             _, name, _, _, _, rate, _, _, _, _, neighbors = line.translate(translation).split(maxsplit=10)
-            valve_infos[name] = ValveInfo(Valve(name, int(rate)), neighbors.split())
-        for valve_info in valve_infos.values():
+            valve_data[name] = ValveInfo(Valve(name, int(rate)), neighbors.split())
+        for valve_info in valve_data.values():
             for neighbor_name in valve_info.neighbor_names:
-                cave.add_edge(valve_info.valve, valve_infos[neighbor_name].valve, 1)
+                cave.add_edge(valve_info.valve, valve_data[neighbor_name].valve, 1)
 
     start_valve = next(valve for valve in cave.nodes if valve.name == 'AA')
 
     reduce_cave_graph(cave, start_valve)
-    print(f'Cave problem reduced from {len(valve_infos)} to {len(cave.nodes)} valves')
+    print(f'Cave problem reduced from {len(valve_data)} to {len(cave.nodes)} valves')
 
     start_time = time.perf_counter()
     result1, _, _ = find_optimum_valve_opening(cave, start_valve, time_limit=30)

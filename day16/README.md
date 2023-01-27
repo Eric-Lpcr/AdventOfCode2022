@@ -13,7 +13,7 @@ The thing was about how to model the problem with a graph, having these minutes 
 to open them, or not... At first my graph was quite complicated, And I didn't figure how to walk inside towards
 a solution.
 
-Back to the problem! In fact we need to find the best opening *order* for the valves, going from one to another.
+Back to the problem! In fact, we need to find the best opening **order** for the valves, going from one to another.
 The cave map can be simplified to a complete graph linking all valves (interesting ones, starting AA, or with rate>0) 
 by their distance. I used Floyd-Warshall algorithm to compute that (one could also use BFS for each starting valve).
 
@@ -22,7 +22,7 @@ to explore all the valves successively, in any order. At each valve we know the 
 a pressure amount which flows until the end of the allocated 30 minutes. This amount can be summed up on each path.
 Once 30 minutes are elapsed, we can stop travelling and compare to the previous amount to keep the maximum.
 It is to be noted that we need to check all the possibilities, there is no global stop criteria for the best solution
-(like in shortest path computation between start and goal for example).
+(like in the shortest path computation between start and goal for example).
 
 Hu, this one was hard!
 
@@ -62,8 +62,8 @@ path of the pair contributes less than half of the current maximum (because the 
 - with the problem input, the search stops after 281_578_065 iterations: 92_544_839_310 were saved, **99.7%** !!!
 
 ### Performance improvements: 
-1. Putting the memorisation of the paths before testing for time limit was counter performant, generating a
-lot of useless invalid paths, with a huge impact when exploring the combinations for part 2.
+1. ~~Putting the memorisation of the paths before testing for time limit was counter performant, generating a
+lot of useless invalid paths, with a huge impact when exploring the combinations for part 2.~~
 2. Time limit to exit the part 1 exploration can be decreased by 2 minutes, as it is useless to travel 1 minute, open a
 valve in another minute and generate no pressure exit as the time is elapsed.
 3. Instead of computing all the shortest paths between all valves on the cave map, we could optimise the map by pruning
@@ -83,6 +83,13 @@ a break condition for each one.
 After correction: 19689 paths give 193e6 combinations, shortened to **7679** explored in 1,5 seconds. Not so much gain
 (at least not aligned with the ratio of the iteration counts), I guess it's because I replaced a loop over a C 
 implementation of combinations by a pure Python loop with a test.
+
+5. Paths involving the same valves can be reduced to the one that gives the best result.
+
+I saw that correction 1 was working, but was incorrect because the last completed paths were not stored. By chance, they
+were not the solution candidates.
+
+After correction: 9967 paths give 49,7e6 combinations, shortened to **30379** explored in 2,2 seconds
 
 # Reusable
 
