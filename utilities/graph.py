@@ -7,28 +7,10 @@
 # Feel free to use this code in your own projects, including commercial projects
 # License: Apache v2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>
 
-from __future__ import annotations
-from typing import Protocol, Dict, List, Set, Tuple, TypeVar, Optional
+from typing import Protocol, Dict, List, Set, Tuple, TypeVar, Optional, Union, Callable
 import collections
-import heapq
 
-
-T = TypeVar('T')
-
-
-class PriorityQueue:
-    def __init__(self):
-        self.heap: List[Tuple[float, T]] = []
-
-    def __bool__(self) -> bool:
-        return bool(self.heap)
-
-    def push(self, item: T, priority: float):
-        heapq.heappush(self.heap, (priority, item))
-
-    def pop(self) -> T:
-        return heapq.heappop(self.heap)[1]
-
+from utilities.collections2 import PriorityQueue, Stack, Queue
 
 Node = TypeVar('Node')
 
@@ -39,55 +21,67 @@ class Graph(Protocol):
     def nodes(self) -> Set[Node]:
         return set()
 
-    def neighbors(self, node: Node) -> Set[Node]:
-        return set()
+    def neighbors(self, node: Node) -> List[Node]:
+        return list()
 
     def depth_first_traversal(self, from_node: Node, visitor):
-        stack = [from_node]
+        stack = Stack()
         visited = set()
+        stack.put(from_node)
         while stack:
-            current = stack.pop()
+            current = stack.get()
             if current not in visited:
+                visitor(current)  # TODO add stop behavior on visitor return value
                 visited.add(current)
-                visitor(current)
                 for neighbor in self.neighbors(current):
                     if neighbor not in visited:
-                        stack.append(neighbor)
+                        stack.put(neighbor)
 
     def breadth_first_traversal(self, from_node: Node, visitor):
-        queue = collections.deque()
-        visited = {from_node}
-        visitor(from_node)
-        queue.append(from_node)
+        queue = Queue()
+        visited = set()
+        visited.add(from_node)
+        visitor(from_node)  # TODO add stop behavior on visitor return value
+        queue.put(from_node)
         while queue:
-            current = queue.pop()
+            current = queue.get()
             for neighbor in self.neighbors(current):
                 if neighbor not in visited:
+                    visitor(neighbor)  # TODO add stop behavior on visitor return value
                     visited.add(neighbor)
-                    visitor(neighbor)
-                    queue.append(neighbor)
+                    queue.put(neighbor)
 
-    def breadth_first_search(self, start: Node, goal: Node):
-        queue = collections.deque()
-        queue.append(start)
+    def breadth_first_search(self, start: Node, goal: Union[Node | Callable]):
+        queue = Queue()
+        queue.put(start)
         came_from: Dict[Node, Optional[Node]] = {start: None}
+        if callable(goal):
+            shall_break = goal
+        else:
+            def shall_break(node: Node):
+                return node == goal
+
+        current = start
         while queue:
-            current: Node = queue.pop()
-            if current == goal:
+            current: Node = queue.get()
+            if shall_break(current):
                 break
-            for next_node in self.neighbors(current):
-                if next_node not in came_from:
-                    queue.append(next_node)
-                    came_from[next_node] = current
-        return came_from
+            for neighbor in self.neighbors(current):
+                if neighbor not in came_from:
+                    queue.put(neighbor)
+                    came_from[neighbor] = current
+        return came_from, current
 
     @classmethod
-    def reconstruct_path(cls, came_from: Dict[Node, Node], start: Node, goal: Node) -> List[Node]:
+    def reconstruct_path(cls, came_from: Dict[Node, Node], start: Node, goal: Node) -> Optional[List[Node]]:
         current: Node = goal
         path: List[Node] = []
         while current != start:
             path.append(current)
-            current = came_from[current]
+            if current in came_from:
+                current = came_from[current]
+            else:
+                return None
         path.append(start)
         path.reverse()
         return path
@@ -101,13 +95,14 @@ class WeightedGraph(Graph):
     def cost(self, from_node: Node, to_node: Node) -> float: pass
 
     def dijkstra_search(self, start: Node, goal: Node):
+        # TODO add goal predicate support and goal return value, like in BFS
         pqueue = PriorityQueue()
-        pqueue.push(start, 0)
+        pqueue.put(start, 0)
         came_from: Dict[Node, Optional[Node]] = {start: None}
         cost_so_far: Dict[Node, float] = {start: 0}
 
         while pqueue:
-            current: Node = pqueue.pop()
+            current: Node = pqueue.get()
             if current == goal:
                 break
 
@@ -116,19 +111,20 @@ class WeightedGraph(Graph):
                 if next_node not in cost_so_far or new_cost < cost_so_far[next_node]:
                     cost_so_far[next_node] = new_cost
                     priority = new_cost
-                    pqueue.push(next_node, priority)
+                    pqueue.put(next_node, priority)
                     came_from[next_node] = current
 
         return came_from, cost_so_far
 
     def a_star_search(self, start: Node, goal: Node, heuristic=None):
+        # TODO add goal predicate support and goal return value, like in BFS
         pqueue = PriorityQueue()
-        pqueue.push(start, 0)
+        pqueue.put(start, 0)
         came_from: Dict[Node, Optional[Node]] = {start: None}
         cost_so_far: Dict[Node, float] = {start: 0}
 
         while pqueue:
-            current: Node = pqueue.pop()
+            current: Node = pqueue.get()
             if current == goal:
                 break
 
@@ -139,7 +135,7 @@ class WeightedGraph(Graph):
                     priority = new_cost
                     if heuristic:
                         priority += heuristic(next_node, goal)
-                    pqueue.push(next_node, priority)
+                    pqueue.put(next_node, priority)
                     came_from[next_node] = current
 
         return came_from, cost_so_far
@@ -204,8 +200,8 @@ class SimpleGraph(Graph):
                 self.edges[node2] = set()
             self.edges[node2].add(node1)
 
-    def neighbors(self, node: Node) -> Set[Node]:
-        return self.edges.get(node, set())
+    def neighbors(self, node: Node) -> List[Node]:
+        return self.edges.get(node, list())
 
 
 class SimpleWeightedGraph(WeightedGraph):
@@ -222,8 +218,8 @@ class SimpleWeightedGraph(WeightedGraph):
         if not self.directed:
             self.edges[node2][node1] = weight
 
-    def neighbors(self, node: Node) -> Set[Node]:
-        return set(self.edges[node].keys())
+    def neighbors(self, node: Node) -> List[Node]:
+        return list(self.edges[node].keys())
 
     def cost(self, from_node: Node, to_node: Node) -> float:
         return self.edges[from_node][to_node]
@@ -245,7 +241,7 @@ class SquareGrid(Graph):
     def passable(self, location: GridLocation) -> bool:
         return location not in self.walls
 
-    def neighbors(self, location: GridLocation, neighborhood=None) -> Set[GridLocation]:
+    def neighbors(self, location: GridLocation, neighborhood=None) -> List[GridLocation]:
         (x, y) = location
         if neighborhood is None:
             neighborhood = [(1, 0), (-1, 0), (0, -1), (0, 1)]  # E W N S
@@ -254,7 +250,7 @@ class SquareGrid(Graph):
         neighbors = [(x+dx, y+dy) for dx, dy in neighborhood]
         results = filter(self.in_bounds, neighbors)
         results = filter(self.passable, results)
-        return set(results)
+        return list(results)
 
 
 def distance_heuristic(a: GridLocation, b: GridLocation) -> float:
@@ -263,7 +259,7 @@ def distance_heuristic(a: GridLocation, b: GridLocation) -> float:
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-class GridWithWeights(SquareGrid, WeightedGraph):
+class WeightedSquareGrid(SquareGrid, WeightedGraph):
     def __init__(self, width: int, height: int):
         super().__init__(width, height)
         self.weights: Dict[GridLocation, float] = {}

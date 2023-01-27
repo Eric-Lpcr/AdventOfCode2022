@@ -1,3 +1,8 @@
+
+# TODO
+# Generalise to inclusive/exclusive edges, infinite edges
+# Implement intersects, intersection, union, generator with step
+
 class InclusiveRange:
     def __init__(self, begin, end):
         self.begin = min(begin, end)

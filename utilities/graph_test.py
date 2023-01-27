@@ -1,4 +1,4 @@
-from utilities.graph import SimpleWeightedGraph, Node, SimpleGraph, print_visitor
+from utilities.graph import SimpleWeightedGraph, SimpleGraph, print_visitor
 
 graph = SimpleWeightedGraph()
 data = [[(1, 1), (2, 7), (5, 3)], [(0, 1), (2, 1), (5, 1)], [(0, 7), (1, 1)], [(4, 2), (5, 2)], [(3, 2), (5, 5)], [(0, 3), (1, 1), (3, 2), (4, 5)]]
