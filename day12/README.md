@@ -32,3 +32,10 @@ Part 2 is easy with this fast algorithm, just need to scan for starting points a
 I think A* is not giving any advantage for this problem, nor Dijkstra as the graph/grid is not weighted...
 I should compare and give a try to Breadth First Search algorithm, but it seems that the implementation I got is 
 not giving the shortest path... 
+
+### Later on
+Recoded with my graph library, got the queue usage reworked (must popleft for a FIFO!) and finally made it with a
+well-coded BFS.
+
+Trick for part 2 is to make a single search starting from the goal and searching down-climbing for a start.
+I improved the graph library for search algorithms to work with a predicate goal.

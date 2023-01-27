@@ -1,35 +1,33 @@
-from typing import Iterator
+from typing import List
 
 from functools import partial
-from implementation import a_star_search, dijkstra_search, GridLocation, WeightedGraph
+
+from utilities.graph import GridLocation, SquareGrid
 
 
-class HeightGrid(WeightedGraph):
+class ElevationGrid(SquareGrid):
     def __init__(self, list_of_list):
+        super().__init__(len(list_of_list[0]), len(list_of_list))
         self.data = list_of_list
-        self.size_x = len(list_of_list[0])
-        self.size_y = len(list_of_list)
 
-    def height(self, location: GridLocation):
+    def elevation(self, location: GridLocation):
         x, y = location
         return self.data[y][x]
 
-    def in_bounds(self, location: GridLocation) -> bool:
-        (x, y) = location
-        return 0 <= x < self.size_x and 0 <= y < self.size_y
+    def can_climb(self, from_location: GridLocation, to_location: GridLocation) -> bool:
+        return ord(self.elevation(to_location)) - ord(self.elevation(from_location)) <= 1
 
-    def passable(self, from_location: GridLocation, to_location: GridLocation) -> bool:
-        return ord(self.height(to_location)) <= ord(self.height(from_location)) + 1
+    def can_descend(self, from_location: GridLocation, to_location: GridLocation) -> bool:
+        return ord(self.elevation(to_location)) - ord(self.elevation(from_location)) >= -1
 
-    def neighbors(self, location: GridLocation) -> Iterator[GridLocation]:
-        (x, y) = location
-        neighbors = [(x + 1, y), (x - 1, y), (x, y - 1), (x, y + 1)]  # E W N S
+    can_move = can_climb
+
+    def neighbors(self, location: GridLocation, neighborhood=None) -> List[GridLocation]:
+        x, y = location
+        neighbors = [(x, y - 1), (x + 1, y), (x, y + 1), (x - 1, y)]  # N E S W
         results = filter(self.in_bounds, neighbors)
-        results = filter(partial(self.passable, location), results)
-        return results
-
-    def cost(self, from_location: GridLocation, to_location: GridLocation):
-        return 1
+        results = filter(partial(self.can_move, location), results)
+        return list(results)
 
 
 def find_goals(height_grid):
@@ -48,27 +46,16 @@ def find_goals(height_grid):
 
 
 def shortest_path(grid, start, goal):
-    came_from, cost_so_far = a_star_search(grid, start, goal)  # also works with dijkstra_search
-    return cost_so_far.get(goal)
-
-
-def shortest_path_from_all_start_values(grid, start_value, goal):
-    costs = set()
-    start_locations = list()
-    for y, line in enumerate(grid.data):
-        start_locations.extend([(x, y) for x, value in enumerate(line) if value == start_value])
-    for start in start_locations:
-        cost = shortest_path(grid, start, goal)
-        if cost:
-            costs.add(cost)
-    return min(costs)
+    came_from, goal = grid.breadth_first_search(start, goal)
+    path = grid.reconstruct_path(came_from, start, goal)
+    return len(path) - 1 if path else 0
 
 
 def main(filename, testing=False, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
-        height_grid = HeightGrid([list(line) for line in f.read().splitlines()])
+        height_grid = ElevationGrid([list(line) for line in f.read().splitlines()])
     start, end = find_goals(height_grid)
 
     result1 = shortest_path(height_grid, start, end)
@@ -76,7 +63,8 @@ def main(filename, testing=False, expected1=None, expected2=None):
     if testing and expected1 is not None:
         assert result1 == expected1
 
-    result2 = shortest_path_from_all_start_values(height_grid, 'a', end)
+    height_grid.can_move = height_grid.can_descend
+    result2 = shortest_path(height_grid, end, lambda location: height_grid.elevation(location) == 'a')
     print(f"Part 2: shortest path length from any 'a' is {result2}")
     if testing and expected2 is not None:
         assert result2 == expected2
@@ -84,4 +72,4 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
 if __name__ == '__main__':
     main('test.txt', True, 31, 29)
-    main('input.txt')
+    main('input.txt', True, 383, 377)
