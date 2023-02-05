@@ -91,6 +91,14 @@ were not the solution candidates.
 
 After correction: 9967 paths give 49,7e6 combinations, shortened to **30379** explored in 2,2 seconds
 
+6. Minimum travel time may be greater than 1...
+
+I computed the minimum travel time from all the distances got with Floyd-Warshall and changed the comparison
+for elapsed time.
+
+After correction: 8515 paths give 36,2e6 combinations, shortened to **20059** explored in 1,5 seconds
+
+
 # Reusable
 
 Learnings on graphs, some links:

@@ -39,6 +39,7 @@ def reduce_cave_graph(cave, start_valve):
 def find_optimum_valve_opening(cave, start_valve, time_limit=30, valve_opening_time=1):
     # compute all shortest paths between any pair of valves
     distances, paths = cave.floyd_warshall()
+    minimum_travel_time = min(min(filter(lambda x: x > 0, d.values())) for d in distances.values())
 
     most_pressure = float("-inf")
     best_path = None
@@ -54,8 +55,8 @@ def find_optimum_valve_opening(cave, start_valve, time_limit=30, valve_opening_t
             best_path = current_path
         all_paths.append((current_path, current_pressure))
 
-        if elapsed_time >= time_limit - 1 - valve_opening_time:  # 1' minimum travelling + opening would be useless
-            return
+        if elapsed_time >= time_limit - minimum_travel_time - valve_opening_time:
+            return  # travelling + opening another valve would be useless
 
         for next_valve in remaining_valves:
             next_path = current_path + [next_valve]
