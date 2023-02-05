@@ -70,7 +70,10 @@ class Graph(Protocol):
                 if neighbor not in came_from:
                     queue.put(neighbor)
                     came_from[neighbor] = current
-        return came_from, current
+        if callable(goal):
+            return came_from, current
+        else:
+            return came_from
 
     @classmethod
     def reconstruct_path(cls, came_from: Dict[Node, Node], start: Node, goal: Node) -> Optional[List[Node]]:
