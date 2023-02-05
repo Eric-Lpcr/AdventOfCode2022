@@ -18,6 +18,12 @@ class Stack:
     def empty(self) -> bool:
         return not self.elements
 
+    def __len__(self):
+        return len(self.elements)
+
+    def __iter__(self):
+        return iter(self.elements)
+
     def put(self, x: T):
         self.elements.append(x)
 
@@ -39,6 +45,12 @@ class PriorityQueue:
 
     def empty(self) -> bool:
         return not self.elements
+
+    def __len__(self):
+        return len(self.elements)
+
+    def __iter__(self):
+        return iter(self.elements)
 
     def put(self, item: T, priority: float):
         heapq.heappush(self.elements, (priority, item))
