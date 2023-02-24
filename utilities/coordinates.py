@@ -1,3 +1,5 @@
+import numbers
+
 from math import prod
 
 from operator import sub, add, eq
@@ -23,6 +25,12 @@ class Coordinate(Iterable):
 
     def __sub__(self, other):
         return type(self)(*map(sub, self, other))
+
+    def __mul__(self, other):
+        if isinstance(other, numbers.Number):
+            return type(self)(*map(lambda x: x * other, self))
+        else:
+            raise TypeError(f'Unsupported parameter type {type(other)}')
 
     def __hash__(self):
         return hash(tuple(self))
