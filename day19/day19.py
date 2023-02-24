@@ -94,7 +94,7 @@ class RobotFactory:
 
     def get_delays(self, materials, robots):
         delays = Resources(*list(self.delay_to_build(cost, materials, robots) for cost in self.blueprint))
-        return reversed(list(zip(delays, self.blueprint, self.productions)))
+        return reversed(list(zip(delays, self.blueprint, self.productions)))  # reversed puts higher value robots first
 
 
 def mine_most_geodes(blueprint, initial_state) -> int:
@@ -104,7 +104,7 @@ def mine_most_geodes(blueprint, initial_state) -> int:
     max_needed_robots = Resources(max(robot_cost.ore for robot_cost in factory.blueprint),
                                   max(robot_cost.clay for robot_cost in factory.blueprint),
                                   max(robot_cost.obsidian for robot_cost in factory.blueprint),
-                                  initial_state.time_left)  # no limit for geode robots, allocated time is a max
+                                  initial_state.time_left)  # no limit for geode robots, one each minute is a max
 
     states_to_explore = Stack()
     states_to_explore.put(initial_state)
@@ -170,7 +170,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     initial_state.time_left = 32
     result2 = math.prod(blueprints_most_geodes(take(3, blueprints), initial_state))
-    print(f"Part 2: {result2}")
+    print(f"Part 2: third three blueprints largest geodes product is {result2}")
     if testing and expected2 is not None:
         assert result2 == expected2
 
