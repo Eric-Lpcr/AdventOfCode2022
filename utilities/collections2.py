@@ -9,8 +9,8 @@ T = TypeVar('T')
 
 
 class Stack:
-    def __init__(self):
-        self.elements = collections.deque()
+    def __init__(self, *args, **kwargs):
+        self.elements = collections.deque(*args, **kwargs)
 
     def __bool__(self) -> bool:
         return bool(self.elements)
