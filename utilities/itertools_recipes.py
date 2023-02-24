@@ -55,7 +55,7 @@ def consume(iterator, n=None):
         next(islice(iterator, n, n), None)
 
 
-def first(iterable, default= None):
+def first(iterable, default=None):
     """Returns the first item or a default value"""
     return next(iter(iterable), default)
 
