@@ -1,10 +1,11 @@
 # [Day 19: Not Enough Minerals](https://adventofcode.com/2022/day/19)
 
 Planning problem.
+
 I always wonder what was the best strategy for RTS 
 [Real Time Strategy](https://en.wikipedia.org/wiki/Real-time_strategy) games.
 
-I search and read about this subject:
+I search and read quite a lot about this subject:
 - Googled "Planning for resource production in real-time strategy games"
 - [Maximization of the Resource Production in RTS
 Games using Planning and Scheduling](http://worldcomp-proceedings.com/proc/p2015/ICA2938.pdf)
@@ -13,12 +14,13 @@ Games](https://waywardstrategy.com/2022/01/23/food-gold-and-beyond/)
 - [How do we improve resource harvesting in RTS 
 games?](https://waywardstrategy.com/2019/12/04/resource-harvesting-in-rts/)
 - Googled "Scheduling problem algorithm"
+- Googled "Cours ordonnancement PDF" (in french)
 - [MIT 6.046J Design and Analysis of Algorithms, Spring 
 2015](https://www.youtube.com/playlist?list=PLUl4u3cNGP6317WaSNfmCvGym2ucw3oGp)
 - Googled "Dynamic programming"
 - [What is Dynamic Programming? Working, Algorithms, and 
 Examples](https://www.spiceworks.com/tech/devops/articles/what-is-dynamic-programming/)
-- Googled "Cours ordonnancement PDF" (in french)
+- [Dynamic Programming - Learn to Solve Algorithmic Problems & Coding Challenges](https://www.youtube.com/watch?v=oBt53YbR9Kk)
 
 Pfff, really so complicated to me. I'd have really liked to program this problem as I would
 do it by hand, adding robots for resources which are most needed and trying to compact every activity like I do it at
@@ -49,6 +51,12 @@ Longer play time, but three first blueprints only.
 My solution takes a bit more time, but it's still acceptable. I guess that all my object arithmetic is 
 counter-performant, but I find it elegant.
 
+### Further improvements
+Put back resources arithmetic with classic implementation, seems a bit faster.
+
+Added a visited state cut-off (how did I forget it?). I thought there was small chance to get the exact same state, 
+but there is some, and it speeds up the problem resolution.
+
 ### Reusable
-- Another experience on exploration.
+- Another experience on exploration
 - `__iter__` and yield

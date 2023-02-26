@@ -12,28 +12,64 @@ from utilities.itertools_recipes import take
 
 @dataclass
 class Resources:
-    ore: int = 0
-    clay: int = 0
-    obsidian: int = 0
-    geode: int = 0
+    ore: float = 0
+    clay: float = 0
+    obsidian: float = 0
+    geode: float = 0
 
     def __add__(self, other):
-        return Resources(*list(x + y for x, y in zip(self, other)))
+        # return Resources(*list(x + y for x, y in zip(self, other)))
+        return Resources(
+            self.ore + other.ore,
+            self.clay + other.clay,
+            self.obsidian + other.obsidian,
+            self.geode + other.geode
+        )
 
     def __sub__(self, other):
-        return Resources(*list(x - y for x, y in zip(self, other)))
+        # return Resources(*list(x - y for x, y in zip(self, other)))
+        return Resources(
+            self.ore - other.ore,
+            self.clay - other.clay,
+            self.obsidian - other.obsidian,
+            self.geode - other.geode
+        )
 
     def __mul__(self, other):
         if isinstance(other, Resources):
-            return Resources(*list(x * y for x, y in zip(self, other)))
+            # return Resources(*list(x * y for x, y in zip(self, other)))
+            return Resources(
+                self.ore * other.ore,
+                self.clay * other.clay,
+                self.obsidian * other.obsidian,
+                self.geode * other.geode
+            )
         else:
-            return Resources(*list(x * other for x in self))
+            # return Resources(*list(x * other for x in self))
+            return Resources(
+                self.ore * other,
+                self.clay * other,
+                self.obsidian * other,
+                self.geode * other
+            )
 
     def __truediv__(self, other):
         if isinstance(other, Resources):
-            return Resources(*list(math.inf if y == 0 else x / y for x, y in zip(self, other)))
+            # return Resources(*list(math.inf if y == 0 else x / y for x, y in zip(self, other)))
+            return Resources(
+                math.inf if other.ore == 0 else self.ore / other.ore,
+                math.inf if other.clay == 0 else self.clay / other.clay,
+                math.inf if other.obsidian == 0 else self.obsidian / other.obsidian,
+                math.inf if other.geode == 0 else self.geode / other.geode
+            )
         else:
-            return Resources(*list(x / other for x in self))
+            # return Resources(*list(x / other for x in self))
+            return Resources(
+                self.ore / other,
+                self.clay / other,
+                self.obsidian / other,
+                self.geode / other
+            )
 
     def __iter__(self):
         yield self.ore
@@ -42,7 +78,8 @@ class Resources:
         yield self.geode
 
     def __hash__(self):
-        return hash(tuple(iter(self)))
+        # return hash(tuple(iter(self)))
+        return hash((self.ore, self.clay, self.obsidian, self.geode))
 
     def __str__(self):
         return f'{self.ore} ore, {self.clay} clay, {self.obsidian} obsidian, {self.geode} geode'
@@ -108,6 +145,7 @@ def mine_most_geodes(blueprint, initial_state) -> int:
 
     states_to_explore = Stack()
     states_to_explore.put(initial_state)
+    visited_states = set()
     while states_to_explore:
         current_state = states_to_explore.get()
         geodes_at_end = current_state.materials.geode + current_state.robots.geode * current_state.time_left
@@ -125,7 +163,10 @@ def mine_most_geodes(blueprint, initial_state) -> int:
             next_state = State(current_state.time_left - delay,
                                current_state.robots + robots_built,
                                current_state.materials + current_state.robots * delay - cost)
-            states_to_explore.put(next_state)
+            if next_state not in visited_states:
+                states_to_explore.put(next_state)
+
+        visited_states.add(current_state)
 
     return most_geodes
 
@@ -170,7 +211,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     initial_state.time_left = 32
     result2 = math.prod(blueprints_most_geodes(take(3, blueprints), initial_state))
-    print(f"Part 2: third three blueprints largest geodes product is {result2}")
+    print(f"Part 2: first three blueprints largest geodes product is {result2}")
     if testing and expected2 is not None:
         assert result2 == expected2
 
