@@ -30,6 +30,12 @@ class Stack:
     def get(self) -> T:
         return self.elements.pop()
 
+    def __str__(self):
+        return str(self.elements)
+
+    def __repr__(self):
+        return repr(self.elements)
+
 
 class Queue(Stack):
     def get(self) -> T:
