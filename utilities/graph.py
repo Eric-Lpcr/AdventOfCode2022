@@ -55,6 +55,7 @@ class Graph(Protocol):
         queue = Queue()
         queue.put(start)
         came_from: Dict[Node, Optional[Node]] = {start: None}
+        result = None
         if callable(goal):
             shall_break = goal
         else:
@@ -65,15 +66,13 @@ class Graph(Protocol):
         while queue:
             current: Node = queue.get()
             if shall_break(current):
+                result = current
                 break
             for neighbor in self.neighbors(current):
                 if neighbor not in came_from:
                     queue.put(neighbor)
                     came_from[neighbor] = current
-        if callable(goal):
-            return came_from, current
-        else:
-            return came_from
+        return came_from, result
 
     @classmethod
     def reconstruct_path(cls, came_from: Dict[Node, Node], start: Node, goal: Node) -> Optional[List[Node]]:
