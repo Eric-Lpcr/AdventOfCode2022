@@ -59,7 +59,7 @@ def decode_path(rock_path):
     return rocky_cells
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     cave = Cave()
@@ -69,17 +69,21 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = cave.fill(500)
     print(f"Part 1: quantity of sand added is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     cave.sand.clear()
     cave.infinite_bottom_depth = 2
     result2 = cave.fill(500)
     print(f"Part 2: quantity of sand added is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 24, 93)
+    solve_problem('input.txt', 745, 27551)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 24, 93)
-    main('input.txt')
+    main()

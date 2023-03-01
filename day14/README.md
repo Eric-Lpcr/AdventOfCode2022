@@ -9,9 +9,10 @@ Used:
 
 For part 2, I clarified the code by extracting some `Cave` methods, and creating a test `at` method enriched
 with the infinite bottom test.
+[day14_2.py]()
 
 ### Optimisation
-Later I read a solution using complex numbers for position coding. I transposed my solution to [day14_complex.py]()
+Later I read a solution using complex numbers for position coding. I transposed my solution to [day14.py]()
 in order to evaluate whether it was faster... Didn't see a sensible difference... 
 Also removed my 'fall to top' optimisation.
 
@@ -21,4 +22,4 @@ predecessor, except for the last move. I inserted a backtracking and wow, it gai
 Oh, so lately discovered the `for: else:` construct, no need for "no move" boolean!
 
 Same documentation page, I learnt that parameter default values are initialised only once, and kept on each call to the
-function. I modified my backtracking with this construct in [day14_complex.py]().
+function. I modified my backtracking with this construct in [day14.py]().
