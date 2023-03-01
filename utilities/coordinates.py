@@ -9,6 +9,10 @@ from typing import Iterable
 
 class Coordinate(Iterable):
 
+    @property
+    def dimension(self):
+        return 0
+
     def __iter__(self): pass
 
     def manhattan_to(self, other):
@@ -43,9 +47,12 @@ class Coordinate(Iterable):
 
 
 class Box:
-    def __init__(self, coord: Coordinate):
-        self.lower = coord
-        self.upper = coord
+    def __init__(self, lower: Coordinate, upper: Coordinate = None):
+        self.lower = lower
+        self.upper = upper if upper is not None else lower
+
+    def dimension(self):
+        return self.lower.dimension
 
     def __contains__(self, coord: Coordinate):
         return all(low <= c <= up for low, c, up in zip(self.lower, coord, self.upper))
@@ -53,10 +60,23 @@ class Box:
     def extend(self, coord: Coordinate):
         if coord not in self:
             self.lower = type(self.lower)(*map(min, self.lower, coord))
-            self.upper = type(self.lower)(*map(max, self.upper, coord))
+            self.upper = type(self.upper)(*map(max, self.upper, coord))
 
+    @property
+    def size(self):
+        return self.upper - self.lower
+
+    @property
+    def grid_size(self):
+        return self.size + self.lower.__class__.ones()
+
+    @property
     def volume(self):
-        return prod(self.upper - self.lower)
+        return prod(self.size)
+
+    @property
+    def grid_volume(self):
+        return prod(self.grid_size)
 
 
 class Coordinate2(Coordinate):
@@ -64,8 +84,21 @@ class Coordinate2(Coordinate):
         self.x = x
         self.y = y
 
+    @property
+    def dimension(self):
+        return 2
+
+    @classmethod
+    def zeroes(cls):
+        return cls(0, 0)
+
+    @classmethod
+    def ones(cls):
+        return cls(1, 1)
+
     def __iter__(self):
-        return iter((self.x, self.y))
+        yield self.x
+        yield self.y
 
 
 class Coordinate3(Coordinate):
@@ -74,5 +107,19 @@ class Coordinate3(Coordinate):
         self.y = y
         self.z = z
 
+    @property
+    def dimension(self):
+        return 3
+
+    @classmethod
+    def zeroes(cls):
+        return cls(0, 0, 0)
+
+    @classmethod
+    def ones(cls):
+        return cls(1, 1, 1)
+
     def __iter__(self):
-        return iter((self.x, self.y, self.z))
+        yield self.x
+        yield self.y
+        yield self.z
