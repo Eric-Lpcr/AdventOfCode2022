@@ -1,6 +1,5 @@
 from math import comb
 
-import time
 from collections import namedtuple, defaultdict
 from operator import itemgetter, xor
 
@@ -9,6 +8,7 @@ from itertools import combinations
 from dataclasses import dataclass
 
 from utilities.graph import SimpleWeightedGraph
+from utilities.timing import timeit
 
 
 @dataclass
@@ -36,6 +36,7 @@ def reduce_cave_graph(cave, start_valve):
         del cave.edges[valve]
 
 
+@timeit(verbose=True)
 def find_optimum_valve_opening(cave, start_valve, time_limit=30, valve_opening_time=1):
     # compute all shortest paths between any pair of valves
     distances, paths = cave.floyd_warshall()
@@ -71,6 +72,7 @@ def find_optimum_valve_opening(cave, start_valve, time_limit=30, valve_opening_t
     return most_pressure, best_path, all_paths
 
 
+@timeit(verbose=True)
 def find_optimum_valve_opening_with_elephant_help(cave, start_valve, time_limit=26, valve_opening_time=1):
     _, _, all_paths = find_optimum_valve_opening(cave, start_valve, time_limit, valve_opening_time)
 
@@ -125,13 +127,13 @@ def find_optimum_valve_opening_with_elephant_help(cave, start_valve, time_limit=
                     my_best_path = my_path
                     elephant_best_path = elephant_path
 
-    print(f'Part 2 iteration count: {iteration_count} over comb({len(all_paths)}, 2) = {comb(len(all_paths), 2)}')
-    print(f'Part 2 cutoff count: {cutoff_count}')
+    print(f'    iteration count: {iteration_count} over comb({len(all_paths)}, 2) = {comb(len(all_paths), 2)}')
+    print(f'    cutoff count: {cutoff_count}')
 
     return most_pressure, my_best_path, elephant_best_path
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     cave = SimpleWeightedGraph()
@@ -151,21 +153,21 @@ def main(filename, testing=False, expected1=None, expected2=None):
     reduce_cave_graph(cave, start_valve)
     print(f'Cave problem reduced from {len(valve_data)} to {len(cave.nodes)} valves')
 
-    start_time = time.perf_counter()
     result1, _, _ = find_optimum_valve_opening(cave, start_valve, time_limit=30)
-    elapsed_time = time.perf_counter() - start_time
-    print(f"Part 1: most pressure is {result1}, elapsed time = {elapsed_time}")
-    if testing and expected1 is not None:
+    print(f"Part 1: most pressure is {result1}")
+    if expected1 is not None:
         assert result1 == expected1
 
-    start_time = time.perf_counter()
     result2, _, _ = find_optimum_valve_opening_with_elephant_help(cave, start_valve, time_limit=26)
-    elapsed_time = time.perf_counter() - start_time
-    print(f"Part 2: with elephant, most pressure is {result2}, elapsed time = {elapsed_time}")
-    if testing and expected2 is not None:
+    print(f"Part 2: with elephant, most pressure is {result2}")
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 1651, 1707)
+    solve_problem('input.txt', 1737, 2216)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 1651, 1707)
-    main('input.txt', True, 1737, 2216)
+    main()

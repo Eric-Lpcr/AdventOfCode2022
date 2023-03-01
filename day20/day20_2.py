@@ -24,7 +24,7 @@ def sum_of_selected_numbers(numbers, indices):
     return sum(numbers[(zero_position + rank) % len(numbers)] for rank in indices)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -33,7 +33,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
     mixed_numbers = mix(numbers)
     result1 = sum_of_selected_numbers(mixed_numbers, [1000, 2000, 3000])
     print(f"Part 1: grove coordinates sum is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     decryption_key = 811589153
@@ -41,10 +41,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
     mixed_numbers = mix(numbers2, times=10)
     result2 = sum_of_selected_numbers(mixed_numbers, [1000, 2000, 3000])
     print(f"Part 2: grove coordinates sum is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 3, 1623178306)
+    solve_problem('input.txt', 11123, 4248669215955)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 3, 1623178306)
-    main('input.txt', True, 11123, 4248669215955)
+    main()

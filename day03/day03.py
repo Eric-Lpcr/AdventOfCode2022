@@ -45,7 +45,7 @@ def compute_rucksack_groups_priorities(rucksacks, group_size=3):
     return map(compute_rucksack_group_priority, grouper(rucksacks, group_size))
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -53,16 +53,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(compute_rucksacks_priorities(rucksacks))
     print(f"Part 1: sum of rucksacks priorities is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = sum(compute_rucksack_groups_priorities(rucksacks))
     print(f"Part 2: sum of rucksack groups priorities is {result2}")
 
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 157, 70)
+    solve_problem('input.txt', 8018, 2518)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 157, 70)
-    main('input.txt')
+    main()

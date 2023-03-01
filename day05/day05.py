@@ -29,7 +29,7 @@ def top_crates(stacks):
     return ''.join(stack[-1] for stack in stacks)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -43,7 +43,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
     rearrange(stacks, crane_moves, crane_model=9000)
     result1 = top_crates(stacks)
     print(f"Part 1: top crates are {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     stacks = initialise_stacks(initial_stacks_description)
@@ -51,10 +51,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
     result2 = top_crates(stacks)
     print(f"Part 2: top crates are {result2}")
 
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 'CMZ', 'MCD')
+    solve_problem('input.txt', 'MQSHJMWNH', 'LLWJRBHVZ')
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 'CMZ', 'MCD')
-    main('input.txt')
+    main()

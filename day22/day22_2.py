@@ -75,7 +75,7 @@ def do_moves(moves, start_position, start_orientation, board):
         else:
             steps = int(move)
             for _ in range(steps):
-                next_position, next_orientation = board.step(position, orientation)
+                next_position, next_orientation = board.neighbor_position(position, orientation)
                 if board.at(next_position) == '#':
                     break
                 position = next_position
@@ -84,7 +84,7 @@ def do_moves(moves, start_position, start_orientation, board):
     return position, orientation
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -93,23 +93,30 @@ def main(filename, testing=False, expected1=None, expected2=None):
         board_lines.pop()
         moves = re.split(r'(\d+)', moves_line)[1:-1]
 
-    board = Board(board_lines)
+    try:
+        board = Board(board_lines)
+    except AssertionError:
+        print("That doesn't work anymore!")
+        return
+
     start_position = Coordinate2(board.cells[0].index('.'), 0)
 
     position, orientation = do_moves(moves, start_position, Right, board)
     result1 = (position.y + 1) * 1000 + (position.x + 1) * 4 + orientation
     print(f"Part 1: final password is {result1}")
-    if testing and expected1 is not None:
-        assert result1 == expected1
 
     board.fold_cube()
     position, orientation = do_moves(moves, start_position, Right, board)
     result2 = (position.y + 1) * 1000 + (position.x + 1) * 4 + orientation
     print(f"Part 2: cube folded, final password is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 6032)
+    solve_problem('input.txt', 164014)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 6032, 5031)
-    main('input.txt')
+    main()

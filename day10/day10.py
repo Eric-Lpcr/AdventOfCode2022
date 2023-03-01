@@ -27,7 +27,7 @@ def signal_sampler(program_execution, sample_cycles):
         yield cycle, execution_data[cycle] if cycle in execution_data else execution_data[cycle - 1]
 
 
-def draw_crt(program_execution, width=40, height=6, lit_pixel='#', dark_pixel=' '):
+def draw_crt(program_execution, width=40, height=6, lit_pixel='#', dark_pixel='.'):
     crt_lines = []
     crt_line = []
     signal = signal_sampler(program_execution, range(1, height * width + 1))  # start drawing at cycle 1
@@ -45,7 +45,7 @@ def draw_crt(program_execution, width=40, height=6, lit_pixel='#', dark_pixel=' 
     return '\n'.join(crt_lines)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -57,24 +57,37 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(signal_strengths)
     print(f"Part 1: signal strength sample sum is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
-    result2 = draw_crt(program_execution, width=40, height=6,
-                       lit_pixel='#' if testing else '\u2588',
-                       dark_pixel='.' if testing else ' ')
+    result2 = draw_crt(program_execution, width=40, height=6)
     print(f"Part 2: CRT displays \n{result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
+
+    print(draw_crt(program_execution, width=40, height=6, lit_pixel='\u2588', dark_pixel=' '))
+
+
+def main():
+    part_2_test_crt = '\n'.join([
+        '##..##..##..##..##..##..##..##..##..##..',
+        '###...###...###...###...###...###...###.',
+        '####....####....####....####....####....',
+        '#####.....#####.....#####.....#####.....',
+        '######......######......######......####',
+        '#######.......#######.......#######.....'])
+
+    part2_input_crt = '\n'.join([
+        '####.###...##..###..#..#.####..##..#..#.',
+        '#....#..#.#..#.#..#.#..#.#....#..#.#..#.',
+        '###..#..#.#....#..#.####.###..#....####.',
+        '#....###..#.##.###..#..#.#....#.##.#..#.',
+        '#....#....#..#.#....#..#.#....#..#.#..#.',
+        '#....#.....###.#....#..#.#.....###.#..#.'])
+
+    solve_problem('test.txt', 13140, part_2_test_crt)
+    solve_problem('input.txt', 10760, part2_input_crt)
 
 
 if __name__ == '__main__':
-    part_2_test_crt = """##..##..##..##..##..##..##..##..##..##..
-###...###...###...###...###...###...###.
-####....####....####....####....####....
-#####.....#####.....#####.....#####.....
-######......######......######......####
-#######.......#######.......#######....."""
-
-    main('test.txt', True, 13140, part_2_test_crt)
-    main('input.txt')
+    main()

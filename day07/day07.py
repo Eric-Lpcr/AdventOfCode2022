@@ -74,7 +74,7 @@ def decode_output(terminal_output):
     return root_dir
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -84,7 +84,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(d.size for d in root_dir.all_directories if d.size <= 100_000)
     print(f"Part 1: total size of directories smaller than 100k is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     min_size_to_delete = root_dir.size - 40_000_000
@@ -92,10 +92,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
     min_directory = min(candidate_dirs, key=lambda d: d.size)
     result2 = min_directory.size
     print(f"Part 2: need to delete directory '{min_directory}' with size {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 95_437, 24_933_642)
+    solve_problem('input.txt', 1648397, 1815525)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 95_437, 24_933_642)
-    main('input.txt')
+    main()

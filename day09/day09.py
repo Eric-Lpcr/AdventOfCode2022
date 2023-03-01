@@ -74,7 +74,7 @@ class Rope:
         return len(self.tail_history)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -84,18 +84,22 @@ def main(filename, testing=False, expected1=None, expected2=None):
     rope.execute_head_moves(moves)
     result1 = rope.tail_visited_count()
     print(f"Part 1: number of positions visited by rope tail is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     rope = Rope(10)
     rope.execute_head_moves(moves)
     result2 = rope.tail_visited_count()
     print(f"Part 2: number of positions visited by rope tail is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 13, 1)
+    solve_problem('test2.txt', 88, 36)
+    solve_problem('input.txt', 6037, 2485)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 13, 1)
-    main('test2.txt', True, None, 36)
-    main('input.txt')
+    main()

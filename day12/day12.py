@@ -51,7 +51,7 @@ def shortest_path(grid, start, goal):
     return len(path) - 1 if path else 0
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -60,16 +60,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = shortest_path(height_grid, start, end)
     print(f"Part 1: shortest path length is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     height_grid.can_move = height_grid.can_descend
     result2 = shortest_path(height_grid, end, lambda location: height_grid.elevation(location) == 'a')
     print(f"Part 2: shortest path length from any 'a' is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 31, 29)
+    solve_problem('input.txt', 383, 377)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 31, 29)
-    main('input.txt', True, 383, 377)
+    main()

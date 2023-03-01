@@ -22,7 +22,7 @@ class InclusiveRange:
         return str(self)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     input_data = list()
@@ -37,7 +37,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(fully_overlapping_pairs)  # sum of booleans gives number of True (1), can't use len on generator
     print(f"Part 1: number of fully overlapping assignment pairs is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     overlapping_pairs = (r1.overlap(r2) for (r1, r2) in input_data)
@@ -46,10 +46,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
     result2 = sum(overlapping_pairs)
     print(f"Part 2: number of overlapping assignment pairs is {result2}")
 
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 2, 4)
+    solve_problem('input.txt', 571, 917)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 2, 4)
-    main('input.txt')
+    main()

@@ -39,7 +39,7 @@ def mix(numbers):
     return mixed_numbers, number_zero.position
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -49,15 +49,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
     selected_mixed_numbers = [mixed_numbers[(zero_position + rank) % len(mixed_numbers)] for rank in [1000, 2000, 3000]]
     result1 = sum(selected_mixed_numbers)
     print(f"Part 1: grove coordinates sum is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 3)
+    solve_problem('input.txt', 11123)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 3, None)
-    main('input.txt')
+    main()

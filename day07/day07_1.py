@@ -81,7 +81,7 @@ def sum_up_dirs_smaller_than(max_size, from_directory):
     return sum(d.size for d in from_directory.all_directories if d.size < max_size)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -91,15 +91,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum_up_dirs_smaller_than(100000, root_dir)
     print(f"Part 1: total size of directories smaller than 100000 is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 95437)
+    solve_problem('input.txt', 1648397)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 95437, None)
-    main('input.txt')
+    main()

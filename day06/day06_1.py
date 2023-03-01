@@ -20,7 +20,7 @@ def find_marker(datastream, marker_length):
     return -1
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None, testing=False):
     print(f'--------- {filename}')
 
     if testing:
@@ -31,20 +31,24 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = find_marker(datastream, marker_length=4)
     print(f"Part 1: packet starts at {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
 
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('mjqjpqmgbljsphdztnvjfqwrcgsmlb', 7, testing=True)
+    solve_problem('bvwbjplbgvbhsrlpgdmjqwftvncz', 5, testing=True)
+    solve_problem('nppdvjthqldpwncqszvftbrmjlhg', 6, testing=True)
+    solve_problem('nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg', 10, testing=True)
+    solve_problem('zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw', 11, testing=True)
+    solve_problem('input.txt', 1896)
+
+
 if __name__ == '__main__':
-    main('mjqjpqmgbljsphdztnvjfqwrcgsmlb', True, 7, None)
-    main('bvwbjplbgvbhsrlpgdmjqwftvncz', True, 5, None)
-    main('nppdvjthqldpwncqszvftbrmjlhg', True, 6, None)
-    main('nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg', True, 10, None)
-    main('zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw', True, 11, None)
-    main('input.txt')
+    main()

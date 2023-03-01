@@ -2,7 +2,7 @@ from collections import deque
 from itertools import zip_longest
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -22,16 +22,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = ''.join([stack[-1] for stack in stacks])
     print(f"Part 1: top crates are {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
 
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 'CMZ')
+    solve_problem('input.txt', 'MQSHJMWNH')
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 'CMZ', None)
-    main('input.txt')
+    main()

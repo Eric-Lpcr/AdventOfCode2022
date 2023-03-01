@@ -186,7 +186,7 @@ def compute_blueprints_quality(blueprints, initial_state):
     return global_quality
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     blueprints = []
@@ -206,16 +206,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = compute_blueprints_quality(blueprints, initial_state)
     print(f"Part 1: blueprints quality level is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     initial_state.time_left = 32
     result2 = math.prod(blueprints_most_geodes(take(3, blueprints), initial_state))
     print(f"Part 2: first three blueprints largest geodes product is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 33, 56*62)
+    solve_problem('input.txt', 1413, 21080)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 33, 56*62)
-    main('input.txt', True, 1413, 21080)
+    main()

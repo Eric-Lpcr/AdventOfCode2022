@@ -69,7 +69,7 @@ class ListPacketItem(PacketItem):
                             f"'{type(self).__name__}' and '{type(other).__name__}'")
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None, testing=False):
     print(f'--------- {filename}')
 
     packet_pairs = list()
@@ -86,15 +86,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(i+1 for i, (p1, p2) in enumerate(packet_pairs) if p1 <= p2)
     print(f"Part 1: sum of right order pair indexes is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 13, testing=True)
+    solve_problem('input.txt', 6478)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 13, None)
-    main('input.txt')
+    main()

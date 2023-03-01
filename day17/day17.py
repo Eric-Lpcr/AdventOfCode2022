@@ -119,7 +119,7 @@ class Chamber:
         print(self.to_string(top_lines))
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -128,16 +128,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
     chamber = Chamber(Rock_patterns, jets, width=7)
     result1 = chamber.throw_rocks(rock_amount=2022, from_position=(2, 3))
     print(f"Part 1: maximum height is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     chamber = Chamber(Rock_patterns, jets, width=7)
     result2 = chamber.throw_rocks(rock_amount=1_000_000_000_000, from_position=(2, 3))
     print(f"Part 2: maximum height is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 3068, 1_514_285_714_288)
+    solve_problem('input.txt', 3147, 1_532_163_742_758)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 3068, 1_514_285_714_288)
-    main('input.txt')
+    main()

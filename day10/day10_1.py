@@ -29,7 +29,7 @@ def sample_signal_strength(program_execution, sample_cycles):
     return samples
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -41,15 +41,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(signal_strengths)
     print(f"Part 1: signal strength sample sum is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
-    print(f"Part 2: xxx is {result2}")
-    if testing and expected2 is not None:
+    print(f"Part 2: {result2}")
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 13140)
+    solve_problem('input.txt', 10760)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 13140, None)
-    main('input.txt')
+    main()

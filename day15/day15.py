@@ -87,7 +87,7 @@ def find_distress_beacon(sensors_data, limit):
     return None
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None, testing=False):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -96,17 +96,21 @@ def main(filename, testing=False, expected1=None, expected2=None):
     row_of_interest = 10 if testing else 2_000_000
     result1 = scan_row(sensors_data, row_of_interest)
     print(f"Part 1: positions where a beacon cannot be present are {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     limit = 20 if testing else 4_000_000
     distress_beacon = find_distress_beacon(sensors_data, limit)
     result2 = distress_beacon.x * 4_000_000 + distress_beacon.y
     print(f"Part 2: beacon tuning frequency is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 26, 56000011, testing=True)
+    solve_problem('input.txt', 5240818, 13213086906101)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 26, 56000011)
-    main('input.txt')
+    main()

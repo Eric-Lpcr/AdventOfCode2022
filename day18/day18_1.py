@@ -5,7 +5,7 @@ def manhattan(cube1, cube2):
     return sum(abs(c2 - c1) for c1, c2 in zip(cube1, cube2))
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -18,15 +18,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(cubes.values())
     print(f"Part 1: lava droplet surface area is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 64)
+    solve_problem('input.txt', 4314)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 64, None)
-    main('input.txt')
+    main()

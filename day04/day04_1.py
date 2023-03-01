@@ -13,7 +13,7 @@ class Range:
             return self.begin <= item <= self.end
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     input_data = list()
@@ -28,16 +28,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = len(including_pairs)
     print(f"Part 1: Number of fully overlapping assignment pairs is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
 
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 2)
+    solve_problem('input.txt', 571)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 2, None)
-    main('input.txt')
+    main()

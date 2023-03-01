@@ -26,7 +26,7 @@ class Game:
     def play(self, turns=1):
         for _ in range(turns):
             for monkey in self.monkeys:
-                monkey.play_turn(self.shall_divide_worry_level)
+                monkey.play_turn()
 
     @property
     def monkey_business(self):
@@ -60,13 +60,15 @@ class Monkey:
     def receive_item(self, item):
         self.items.append(item)
 
-    def play_turn(self, shall_divide_worry_level=True):
+    def play_turn(self):
         while len(self.items):
             self.inspections += 1
             item = self.items.popleft()
-            item = self.operation(item) % self.game.item_modulus
-            if shall_divide_worry_level:
+            item = self.operation(item)
+            if self.game.shall_divide_worry_level:
                 item //= 3
+            else:
+                item %= self.game.item_modulus
             receiver = self.receiver_if_true if self.test(item) else self.receiver_if_false
             self.game.send_to_monkey(receiver, item)
 
@@ -105,7 +107,7 @@ def decode_monkey(description):
     return Monkey(monkey_index, items, operation, test, receiver_if_true, receiver_if_false)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -118,7 +120,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = game.monkey_business
     print(f"Part 1: monkey business is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     game = Game(shall_divide_worry_level=False)
@@ -128,10 +130,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result2 = game.monkey_business
     print(f"Part 2: monkey business is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 10605, 2713310158)
+    solve_problem('input.txt', 88208, 21115867968)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 10605, 2713310158)
-    main('input.txt')
+    main()

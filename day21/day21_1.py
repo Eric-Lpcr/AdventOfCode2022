@@ -21,7 +21,7 @@ class Monkey:
             return self.value
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -38,15 +38,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = tribe.get('root').yell()
     print(f"Part 1: root monkey value is {int(result1)}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 152)
+    solve_problem('input.txt', 10037517593724)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 152, None)
-    main('input.txt', True, 10037517593724, None)
+    main()

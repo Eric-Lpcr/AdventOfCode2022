@@ -71,7 +71,7 @@ class ListPacketItem(PacketItem):
                             f"'{type(self).__name__}' and '{type(other).__name__}'")
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None, testing=False):
     print(f'--------- {filename}')
     with open(filename) as f:
         packet_pairs = [tuple(PacketItem.build(literal_eval(line)) for line in packet_pair_block.splitlines())
@@ -85,7 +85,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(i+1 for i, (p1, p2) in enumerate(packet_pairs) if p1 <= p2)
     print(f"Part 1: sum of right order pair indexes is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     dividers = [PacketItem.build([[p]]) for p in (2, 6)]
@@ -98,10 +98,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result2 = prod(packets.index(divider) + 1 for divider in dividers)
     print(f"Part 2: decoder key is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 13, 140, testing=True)
+    solve_problem('input.txt', 6478, 21922)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 13, 140)
-    main('input.txt')
+    main()

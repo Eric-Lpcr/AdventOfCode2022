@@ -47,7 +47,7 @@ def find_optimum_valve_opening(cave, time_limit=30, valve_opening_time=1):
     return most_pressure, best_path
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     cave = SimpleWeightedGraph()
@@ -64,15 +64,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1, _ = find_optimum_valve_opening(cave)
     print(f"Part 1: most pressure is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 1651)
+    solve_problem('input.txt', 1737)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 1651, 1707)
-    main('input.txt')
+    main()

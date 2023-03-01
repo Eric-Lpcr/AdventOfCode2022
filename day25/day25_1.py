@@ -75,7 +75,7 @@ class Snafu:
         return f'Snafu({self})'
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None, testing=False):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -100,16 +100,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(snafus, Snafu(0))
     print(f"Part 1: sum is {result1} (decimal {int(result1)})")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = None
-    print(f"Part 2: result is offered by young elf")
-    if testing and expected2 is not None:
+    print(f"Part 2: {result2}")
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('notice.txt', testing=True)
+    solve_problem('test.txt', '2=-1=0', testing=True)
+    solve_problem('input.txt', '2=12-100--1012-0=012')
+
+
 if __name__ == '__main__':
-    main('notice.txt', True, None, None)
-    main('test.txt', True, '2=-1=0', None)
-    main('input.txt')
+    main()

@@ -99,7 +99,7 @@ def solve_left(result, op, right):
     return left
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -118,7 +118,7 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = int(root.yell)
     print(f"Part 1: root monkey yell {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     root.operator = operator.eq
@@ -126,10 +126,14 @@ def main(filename, testing=False, expected1=None, expected2=None):
     human = Human('humn')
     result2 = int(human.yell)
     print(f"Part 2: human shall yell {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 152, 301)
+    solve_problem('input.txt', 10037517593724, 3272260914328)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 152, 301)
-    main('input.txt', True, 10037517593724, 3272260914328)
+    main()

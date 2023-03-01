@@ -101,7 +101,7 @@ def decode_monkey(description):
     return Monkey(monkey_index, items, operation, test, receiver_if_true, receiver_if_false)
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     game = Game()
@@ -113,15 +113,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = game.monkey_business
     print(f"Part 1: monkey business is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 10605)
+    solve_problem('input.txt', 88208)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 10605, None)
-    main('input.txt')
+    main()

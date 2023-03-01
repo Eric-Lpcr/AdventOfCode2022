@@ -3,23 +3,13 @@ from itertools import combinations
 from enum import IntEnum
 import re
 
+from utilities.enums2 import IntEnumWithProperty
 from utilities.collections2 import Queue
 from utilities.coordinates import Coordinate2
 from utilities.itertools_recipes import first
 
 
-class IntEnumWithCoord(IntEnum):
-
-    def __new__(cls, *args, **kwargs):
-        obj = int.__new__(cls, args[0])
-        obj._value_ = args[0]
-        return obj
-
-    def __init__(self, _, coord):
-        self._coord_ = coord
-
-
-class Orientation(IntEnumWithCoord):
+class Orientation(IntEnumWithProperty):
     Right = 0, Coordinate2(1, 0)
     Down = 1, Coordinate2(0, 1)
     Left = 2, Coordinate2(-1, 0)
@@ -27,7 +17,7 @@ class Orientation(IntEnumWithCoord):
 
     @property
     def vector(self) -> Coordinate2:
-        return self._coord_
+        return self._property_
 
     @property
     def at_right(self) -> 'Orientation':
@@ -91,7 +81,7 @@ class Board:
         return neighbor_position, orientation
 
 
-class Corner(IntEnumWithCoord):
+class Corner(IntEnumWithProperty):
     TopLeft = 0, Coordinate2(0, 0)
     TopRight = 1, Coordinate2(1, 0)
     BottomRight = 2, Coordinate2(1, 1)
@@ -99,7 +89,7 @@ class Corner(IntEnumWithCoord):
 
     @property
     def position(self) -> Coordinate2:
-        return self._coord_
+        return self._property_
 
 
 class Side(IntEnum):
@@ -336,7 +326,7 @@ def compute_password(position: Coordinate2, orientation: Orientation) -> int:
     return (position.y + 1) * 1000 + (position.x + 1) * 4 + orientation
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -352,17 +342,21 @@ def main(filename, testing=False, expected1=None, expected2=None):
     position, orientation = board.move(orders, start_position, start_orientation)
     result1 = compute_password(position, orientation)
     print(f"Part 1: final password is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     board2 = CubeBoard(board_lines)
     position, orientation = board2.move(orders, start_position, start_orientation)
     result2 = compute_password(position, orientation)
     print(f"Part 2: cube folded, final password is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 6032, 5031)
+    solve_problem('input.txt', 164014, 47525)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 6032, 5031)
-    main('input.txt', True, 164014, 47525)
+    main()

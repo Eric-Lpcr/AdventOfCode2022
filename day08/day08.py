@@ -78,7 +78,7 @@ def scenic_scores(forest):
     return scores
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -86,16 +86,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = sum(map(sum, visible_trees(forest)))
     print(f"Part 1: number of visible trees is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     scores = scenic_scores(forest)
     result2 = max(map(max, scores))
     print(f"Part 2: maximum scenic score is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 21, 8)
+    solve_problem('input.txt', 1825, 235200)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 21, 8)
-    main('input.txt')
+    main()

@@ -21,8 +21,8 @@ I also tried to simplify the code by inheriting my classes from int and list, bu
 and I would have had to overload all comparison operators (my classes were inheriting bad behavior...) and code
 would have become longer.
 
-I finally wrote a compact non object version with a `compare` function in [day13_compare.py](). `functools.cmp_to_key` allows to
-convert such a function to a key for `sort` or `sorted`.
+I finally wrote a compact non object version with a `compare` function in [day13_compare.py](). `functools.cmp_to_key` 
+allows to convert such a function to a key for `sort` or `sorted`.
 
 Better use `list.index` for part 2!
 

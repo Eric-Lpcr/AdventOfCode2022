@@ -236,10 +236,10 @@ class CubeBoard(Board):
         for face in self.faces.values():
             for edge in face.get_edges():  # edges are stored according to orientations
                 neighbor = first(Cube_edges[frozenset(edge)] - {face.number})
-                face.teleports.append(neighbor)  # so are the neighbor faces
+                face.neighbors.append(neighbor)  # so are the neighbor faces
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -254,17 +254,21 @@ def main(filename, testing=False, expected1=None, expected2=None):
     position, orientation = board.do_moves(moves, start_position, start_orientation)
     result1 = (position.y + 1) * 1000 + (position.x + 1) * 4 + orientation
     print(f"Part 1: final password is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     board2 = CubeBoard(board_lines)
     position, orientation = board2.do_moves(moves, start_position, start_orientation)
     result2 = (position.y + 1) * 1000 + (position.x + 1) * 4 + orientation
     print(f"Part 2: cube folded, final password is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 6032, 5031)
+    solve_problem('input.txt', 164014, 47525)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 6032, 5031)
-    main('input.txt', True, 164014, 47525)
+    main()

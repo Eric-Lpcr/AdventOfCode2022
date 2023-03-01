@@ -52,10 +52,11 @@ this will support face orientation according to a particular cube development.
 
 Once done, they share edges that we can connect with teleports, as planned initially.
 
-I finally refactored my code (first working version in [day22_first_working.py](day22_first_working.py)) to make it
+I got my first working version in [day22_3.py](day22_3.py) and finally refactored my code to make it
 more clear with enums and nice classes.
+ 
+[day22.py](day22.py)
 
 ### Reusable
-- Adding a property to enum values
+- Adding a property to enum values:  utilities.enums2.IntEnumWithProp
 - Cube geometry
-- 

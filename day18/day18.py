@@ -54,7 +54,7 @@ def external_surface_area(lava_droplet):
     return surface, volume
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -62,16 +62,20 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = surface_area(lava_droplet)
     print(f"Part 1: lava droplet surface area is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2, volume = external_surface_area(lava_droplet)
     print(f"Part 2: lava droplet external surface area is {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
     print(f"        [lava droplet external volume is {volume}]")
 
 
+def main():
+    solve_problem('test.txt', 64, 58)
+    solve_problem('input.txt', 4314, 2444)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 64, 58)
-    main('input.txt')
+    main()

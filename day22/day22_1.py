@@ -45,14 +45,14 @@ def do_moves(moves, start_position, start_orientation, board):
         else:
             steps = int(move)
             for _ in range(steps):
-                next_position = board.step(position, Directions[orientation])
+                next_position = board.neighbor_position(position, Directions[orientation])
                 if board.at(next_position) == '#':
                     break
                 position = next_position
     return position, orientation
 
 
-def main(filename, testing=False, expected1=None, expected2=None):
+def solve_problem(filename, expected1=None, expected2=None):
     print(f'--------- {filename}')
 
     with open(filename) as f:
@@ -67,15 +67,19 @@ def main(filename, testing=False, expected1=None, expected2=None):
 
     result1 = (position.y + 1) * 1000 + (position.x + 1) * 4 + orientation
     print(f"Part 1: final password is {result1}")
-    if testing and expected1 is not None:
+    if expected1 is not None:
         assert result1 == expected1
 
     result2 = 0
     print(f"Part 2: {result2}")
-    if testing and expected2 is not None:
+    if expected2 is not None:
         assert result2 == expected2
 
 
+def main():
+    solve_problem('test.txt', 6032)
+    solve_problem('input.txt', 164014)
+
+
 if __name__ == '__main__':
-    main('test.txt', True, 6032, None)
-    main('input.txt')
+    main()
