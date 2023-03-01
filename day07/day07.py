@@ -1,6 +1,5 @@
 import typing
 from dataclasses import dataclass, field
-from typing import List, Union
 
 Directory = typing.NewType("Directory", None)
 
@@ -9,6 +8,10 @@ Directory = typing.NewType("Directory", None)
 class Node:
     name: str
     parent: Directory = field(init=False)
+
+    @property
+    def size(self) -> int:
+        return 0
 
     def __str__(self):
         return self.name
@@ -19,37 +22,41 @@ class Node:
 
 @dataclass
 class File(Node):
-    size: int = 0
+    _size: int = 0
+
+    @property
+    def size(self) -> int:
+        return self._size
 
 
 @dataclass
 class Directory(Node):
-    content: List[Union[File, Directory]] = field(default_factory=list)
+    content: list[Node] = field(default_factory=list)
 
     @property
-    def size(self):
+    def size(self) -> int:
         return sum(node.size for node in self.content)
 
-    def add(self, node):
+    def add(self, node: Node):
         self.content.append(node)
         node.parent = self
 
-    def get(self, name):
+    def get(self, name: str) -> Node:
         return next(node for node in self.content if node.name == name)
 
     @property
-    def directories(self):
-        return [d for d in self.content if isinstance(d, Directory)]
+    def directories(self) -> list['Directory']:
+        return [node for node in self.content if isinstance(node, Directory)]
 
     @property
-    def all_directories(self):
+    def all_directories(self) -> list['Directory']:
         result = list(self.directories)
         for d in self.directories:
             result.extend(d.all_directories)
         return result
 
 
-def decode_output(terminal_output):
+def decode_output(terminal_output) -> Directory:
     root_dir = Directory('/')
     current_dir = root_dir
     ls_mode = False
